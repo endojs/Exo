@@ -1,38 +1,39 @@
 # Pledger
 
-Pledger provides a `Personal Ledger`: an API for exchanging and interacting with object capabilities.
+Pledger provides a `Personal Ledger`: an API for exchanging and interacting with electronic rights.
 
 ## Caveats
 
-**Note that this implementation is currently insecure.  Do not use it for production until 1.0.0**
+**Note that this implementation is currently incomplete and insecure.  Do not use it for production until 1.0.0**
 
-Communication with `ag-solo` has not yet been secured: it is sending evaluable strings over the localhost WebSocket.
-
-WebSocket service URIs **do** receive cookies for their own domain.
+Communication via `@agoric/transport-ag-chain-cosmos` has not yet been secured: it is sending evaluable strings over the localhost WebSocket.
 
 ## Design
 
 Pledger's notion of electronic rights directly uses Agoric's ERights Transfer Protocol (ERTP) layered on top of object capabilities (`ocaps`).
 
-A running webpage can `link` a local Pledger session with any number of backend services by calling:
+A running webpage can `link` a local Pledger session with distributed objects by calling:
 
 ```js
 import { E } from '@agoric/eventual-send';
-import { Pledger } from '@agoric/pledger-extension';
-import { SturdyRef } from '@agoric/pactp';
-import '@agoric/pactp-ag-chain-cosmos';
-import '@agoric/pactp-websocket';
+import { Pledger } from '@pledger/browser-extension';
+
+// Set up the persistable references to remote objects.
+import SturdyRef from '@pledger/sturdy-ref';
+import TransportWebSocket from '@pledger/transport-websocket';
+import TransportAgChainCosmos from '@agoric/transport-ag-chain-cosmos';
+SturdyRef.register([TransportWebSocket, TransportAgChainCosmos]);
 
 // URI for example dapp (bound to a chainID)
 const dappSturdy = SturdyRef('ag-chain-cosmos:testnet-1.2.3:example#fe99');
-const webSturdy = SturdyRef('wss://example.com/api/mystuff');
+const webSturdy = SturdyRef('wss://example.com/api/mystuff#0');
 
 const commonName = 'my example exchange';
 const dappC = E.C(Pledger)
-  .M.linkWith(dappSturdy.getRcvr())
+  .M.linkWith(dappSturdy.getObj())
   .M.persistent(commonName);
 const webC = E.C(Pledger)
-  .M.linkWith(webSturdy.getRcvr())
+  .M.linkWith(webSturdy.getObj())
   .M.persistent(commonName);
 dappC
   .M.hello('Hi, dapp!')
@@ -54,53 +55,27 @@ All Pledger URIs are used to establish a unique object-capability connection to 
 E(Pledger).linkWith(remoteUri) -> Promise<anonSession>
 
 // Within Pledger:
-remoteFactory = getBootstrapObject(remoteUri)
-anonSession = E(remoteFactory).linkPledger(pledgerFacet)
-resolveToWebPage(anonSession)
+anonSession = new HandledPromise((resolve, reject, resolveWithPresence => {
+  remoteFactory = getBootstrapObject(remoteUri)
+  anonSession = E(remoteFactory).linkPledger(pledgerFacet)
+  anonSession.resolve(resolveToWebPage(anonSession)
+});
 ```
 
 If the web app wants to create or resume a persistent session, they can ask Pledger to do so:
 
 ```js
 // On web page:
-E(anonSession).persistent(commonName)
+E(anonSession).persistent(commonName) // Promise<persistentSession>
 // Within Pledger:
-// If commonName has not already be used during this anonymous session, prompt the user
-// for the petname to give/reuse for the keypair.
-persistentSession = E(anonSession).resumeSessionWithKey(sessionKey)
-// On remote:
-remotePersistentSession = E(pledgerFacet).sessionChallenge(sessionKey, challenge)
-// Within Pledger:
-persistentSession = E(anonSession).sessionResponse(sessionKey, response)
-resolveToWebPage(persistentSession)
-```
-
-### ag-chain-cosmos
-
-These URIs name an object in Agoric's zone in the Cosmos blockchain.  Eventual-send messages are marshalled directly to the object.
-
-`ag-chain-cosmos` is only available when the Pledger Web Extension is installed in your browser and configured to run SwingSet.
-
-### wss, ws
-
-These URLs name a WebSocket interface, which communicates directly to the browser UI code via JSON messages.:
-
-```js
-const executor = (resolve, reject, resolveWithPresence) => {
-  const ws = new WebSocket(uri);
-  ws.addEventListener('open', () => {
-    const exports = new Map();
-    let nextExportId = 0;
-    let handler;
-    ws.addEventListener('message', ev => {
-      capTPHandler(JSON.parse(ev.data));
-    });
-
-    const exportPledgerId = nextExportId ++;
-    exports.set(exportPledgerId, pledgerBootstrap);
-    ws.send(JSON.stringify({ type: 'PLEDGER_BOOTSTRAP', exportId }));
-  });
-};
-
-const handledPromise = new HandledPromise(executor, unfulfilledHandler);
+persistentSession = new HandledPromise((resolve, reject, resolveWithPresence) => {
+  // If commonName has not already been used during this anonymous session, prompt the user
+  // for the petname to give/reuse for the keypair.
+  sessionKey = ...;
+  E(anonSession).resumeSessionWithKey(sessionKey, signedSessionKey).then(sessionID => {
+    presenceHandler = makePresenceHandler(anonSession, sessionID);
+    const presence = resolveWithPresence(presenceHandler);
+    presence.toString = () => `${commonName} ${sessionID}`;
+  }).catch(reject);
+});
 ```

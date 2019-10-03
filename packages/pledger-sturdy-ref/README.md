@@ -1,11 +1,11 @@
-# `web-promise`
+# `sturdy-ref`
 
 > TODO: description
 
 ## Usage
 
 ```
-const webPromise = require('web-promise');
+const sturdyRef = require('sturdy-ref');
 
 // TODO: DEMONSTRATE API
 ```
