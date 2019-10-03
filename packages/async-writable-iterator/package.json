@@ -31,6 +31,7 @@
     "url": "https://github.com/Agoric/Pledger/issues"
   },
   "dependencies": {
+    "async-stream-iterator": "^1.0.3",
     "tape-promise": "^4.0.0"
   }
 }
