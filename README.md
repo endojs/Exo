@@ -4,7 +4,7 @@ Pledger provides a `Personal Ledger`: an API for exchanging and interacting with
 
 ## Caveats
 
-**Note that this implementation is currently incomplete and insecure.  Do not use it for production until 1.0.0**
+**Note that this implementation is currently insecure and incomplete.  Do not use it for production until 1.0.0**
 
 Communication via `@agoric/transport-ag-chain-cosmos` has not yet been secured: it is sending evaluable strings over the localhost WebSocket.
 
@@ -37,13 +37,13 @@ const webC = E.C(Pledger)
   .M.persistent(commonName);
 dappC
   .M.hello('Hi, dapp!')
-  .M.then(msg => console.log('from dapp', msg));
+  .P.then(msg => console.log('from dapp', msg));
 webC
   .M.hello('Hi, web!')
-  .M.then(msg => console.log('from web', msg));
+  .P.then(msg => console.log('from web', msg));
 ```
 
-If the `persistent(commonName)` method is called on a `linkWith` result, then the web page wants a public key to identify a persistent session.  Pledger's secure UI will prompt for a petname for the session, either a fresh one for a newly-generated keypair, or an existing one.  All the web page's session petnames will be scoped to the current origin and `commonName`.
+If the web page wants a public key to identify a persistent session, it calls the `persistent(commonName)` method of a `linkWith` result.  Pledger's secure UI will prompt for a petname for the session, either a fresh one for a newly-generated keypair, or an existing one.  All the web page's session petnames will be scoped to the current origin and `commonName`.
 
 Without `persistent()`, Pledger will not prompt, but will establish only a fresh ephemeral session.
 
@@ -52,13 +52,11 @@ Without `persistent()`, Pledger will not prompt, but will establish only a fresh
 All Pledger URIs are used to establish a unique object-capability connection to the backend server.  The initial process is:
 
 ```js
-E(Pledger).linkWith(remoteUri) -> Promise<anonSession>
+E(Pledger).linkWith(receptionist) -> Promise<anonSession>
 
 // Within Pledger:
-anonSession = new HandledPromise((resolve, reject, resolveWithPresence => {
-  remoteFactory = getBootstrapObject(remoteUri)
-  anonSession = E(remoteFactory).linkPledger(pledgerFacet)
-  anonSession.resolve(resolveToWebPage(anonSession)
+anonSession = new HandledPromise((resolve, reject) => {
+  E(receptionist).linkPledger(pledgerFacet).then(resolve).catch(reject);
 });
 ```
 
@@ -71,11 +69,10 @@ E(anonSession).persistent(commonName) // Promise<persistentSession>
 persistentSession = new HandledPromise((resolve, reject, resolveWithPresence) => {
   // If commonName has not already been used during this anonymous session, prompt the user
   // for the petname to give/reuse for the keypair.
-  sessionKey = ...;
-  E(anonSession).resumeSessionWithKey(sessionKey, signedSessionKey).then(sessionID => {
-    presenceHandler = makePresenceHandler(anonSession, sessionID);
-    const presence = resolveWithPresence(presenceHandler);
-    presence.toString = () => `${commonName} ${sessionID}`;
-  }).catch(reject);
+  [pubKey, privKey] = ...;
+  E(anonSession).resumeSessionWithKey(pubKey).then(({challenge, verifier}) => {
+    const signedChallenge = sign(privKey, challenge);
+    return E(verifier).sendResponse(signedChallenge);
+  }).then(resolve).catch(reject);
 });
 ```
