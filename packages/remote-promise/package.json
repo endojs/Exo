@@ -1,0 +1,36 @@
+{
+  "name": "remote-promise",
+  "version": "0.1.0",
+  "description": "HandledPromises using a bidirectional stream",
+  "keywords": [
+    "async",
+    "iterators",
+    "websocket",
+    "distributed",
+    "objects"
+  ],
+  "author": "Michael FIG <michael@fig.org>",
+  "homepage": "https://github.com/Agoric/Pledger/packages/remote-promise",
+  "license": "Apache-2.0",
+  "main": "lib/remote-promise.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Agoric/Pledger.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/Agoric/Pledger/issues"
+  },
+  "dependencies": {
+    "tape-promise": "^4.0.0"
+  }
+}

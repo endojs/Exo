@@ -1,0 +1,34 @@
+{
+  "name": "web-promise",
+  "version": "0.1.0",
+  "description": "Create promises for remote objects by URI",
+  "keywords": [
+    "eventual-send",
+    "HandledPromise",
+    "ocaps"
+  ],
+  "author": "Michael FIG <michael@fig.org>",
+  "homepage": "https://github.com/Agoric/Pledger/packages/web-promise",
+  "license": "Apache-2.0",
+  "main": "lib/web-promise.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Agoric/Pledger.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/Agoric/Pledger/issues"
+  },
+  "dependencies": {
+    "tape-promise": "^4.0.0"
+  }
+}
