@@ -4,14 +4,14 @@ Thank you!
 
 ## Contact
 
-We use github issues for all bug reports: https://github.com/Agoric/@REPO@/issues
+We use github issues for all bug reports: https://github.com/Agoric/Pledger/issues
 
 ## Installing, Testing
 
 You'll need Node.js version 11 or higher. There is a unit test to
 double-check that you have a suitable version.
 
-* git clone https://github.com/Agoric/@REPO@/
+* git clone https://github.com/Agoric/Pledger/
 * npm install
 * npm test
 
