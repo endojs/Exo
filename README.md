@@ -12,6 +12,22 @@ Communication via `@agoric/transport-ag-chain-cosmos` has not yet been secured: 
 
 Pledger's notion of electronic rights directly uses Agoric's ERights Transfer Protocol (ERTP) layered on top of object capabilities (`ocaps`).
 
+### Command-line interface
+
+```sh
+# Run it without installing
+npx @pledger/cli help
+# Install the CLI globally
+npm install -g @pledger/cli
+pledger help
+# Install the CLI locally
+npm install @pledger/cli
+# Now, you can use "pledger" in NPM scripts, or run
+./node_modules/.bin/pledger help
+```
+
+### Web Extension
+
 A running webpage can `link` a local Pledger session with distributed objects by calling:
 
 ```js
@@ -25,7 +41,7 @@ import TransportAgChainCosmos from '@agoric/transport-ag-chain-cosmos';
 SturdyRef.register([TransportWebSocket, TransportAgChainCosmos]);
 
 // URI for example dapp (bound to a chainID)
-const dappSturdy = SturdyRef('ag-chain-cosmos:testnet-1.2.3:example#fe99');
+const dappSturdy = SturdyRef('ag-chain-cosmos://testnet-1.2.3/example#fe99');
 const webSturdy = SturdyRef('wss://example.com/api/mystuff#0');
 
 const commonName = 'my example exchange';
@@ -68,10 +84,10 @@ E(anonSession).persistent(commonName) // Promise<persistentSession>
 // Within Pledger:
 persistentSession = new HandledPromise((resolve, reject, resolveWithPresence) => {
   // If commonName has not already been used during this anonymous session, prompt the user
-  // for the petname to give/reuse for the keypair.
-  [pubKey, privKey] = ...;
-  E(anonSession).resumeSessionWithKey(pubKey).then(({challenge, verifier}) => {
-    const signedChallenge = sign(privKey, challenge);
+  // for the petname to give/reuse for the keypair and optSessionID.
+  [pubKey, privKey, optSessionID] = ...;
+  E(anonSession).resumeSessionWithKey(pubkey, optSessionID).then(({challenge, sessionID, verifier}) => {
+    const signedChallenge = sign(privKey, challenge, sessionID);
     return E(verifier).sendResponse(signedChallenge);
   }).then(resolve).catch(reject);
 });
