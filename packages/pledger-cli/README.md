@@ -1,11 +1,11 @@
-# `sturdy-ref`
+# `cli`
 
 > TODO: description
 
 ## Usage
 
 ```
-const sturdyRef = require('sturdy-ref');
+const cli = require('cli');
 
 // TODO: DEMONSTRATE API
 ```

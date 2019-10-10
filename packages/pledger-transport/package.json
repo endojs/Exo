@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "async-stream-iterator": "^1.0.3",
+    "esm": "^3.2.25",
     "tape-promise": "^4.0.0"
   }
 }
