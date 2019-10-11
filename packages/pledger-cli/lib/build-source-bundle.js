@@ -1,9 +1,15 @@
 import { rollup } from 'rollup';
+import path from 'path';
 import resolve from 'rollup-plugin-node-resolve';
 import acornEventualSend from '@agoric/acorn-eventual-send';
 
-export default async function bundleSource(startFilename) {
-  const resolvedPath = require.resolve(startFilename);
+const DEFAULT_MODULE_FORMAT = 'cjs';
+
+export default async function bundleSource(
+  startFilename,
+  moduleFormat = DEFAULT_MODULE_FORMAT,
+) {
+  const resolvedPath = path.resolve(startFilename);
   const bundle = await rollup({
     input: resolvedPath,
     treeshake: false,
@@ -13,7 +19,7 @@ export default async function bundleSource(startFilename) {
   });
   const { output } = await bundle.generate({
     exports: 'named',
-    format: 'cjs',
+    format: moduleFormat,
   });
   if (output.length !== 1) {
     throw Error('unprepared for more than one chunk/asset');
@@ -33,7 +39,8 @@ export default async function bundleSource(startFilename) {
   // be evaluated and invoked to get at the exports.
 
   const sourceMap = `//# sourceURL=${resolvedPath}\n`;
-  source = `\
+  if (moduleFormat)
+    source = `\
 function getExport() { \
 let exports = {}; \
 const module = { exports }; \
@@ -44,5 +51,5 @@ return module.exports;
 }
 `;
 
-  return { source, sourceMap };
+  return { source, sourceMap, moduleFormat };
 }

@@ -34,10 +34,12 @@
   },
   "dependencies": {
     "@agoric/acorn-eventual-send": "^1.0.1",
+    "@pledger/mini-captp": "^0.1.0",
     "esm": "^3.2.25",
     "minimist": "^1.2.0",
     "rollup": "^1.23.1",
-    "rollup-plugin-node-resolve": "^5.2.0"
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "ws": "^7.1.2"
   },
   "devDependencies": {
     "tape-promise": "^4.0.0"
