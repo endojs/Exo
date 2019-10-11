@@ -4,7 +4,7 @@ import { E } from '@agoric/eventual-send';
 import { getCapTP } from '@pledger/mini-captp';
 import buildSourceBundle from './build-source-bundle';
 
-const DEFAULT_AG_SOLO = 'ws://localhost:8000/wsconn';
+const DEFAULT_AG_SOLO = 'ws://localhost:8000/captp';
 
 const makePromise = () => {
   const pr = {};
@@ -45,9 +45,12 @@ export default async function upload(args) {
       console.log(data);
       try {
         const obj = JSON.parse(data);
+        if (obj.type === 'CTP_ERROR') {
+          throw obj.error;
+        }
         handler[obj.type](obj);
       } catch (e) {
-        console.log('error processing message', e);
+        console.log('server error processing message', data, e);
         exit.rej(e);
       }
     });
