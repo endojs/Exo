@@ -83,7 +83,7 @@ export function getCapTP(ourId, send, bootstrapObj = undefined) {
             type: 'CTP_CALL',
             questionID: lastQuestionID,
             target: slot,
-            method: serialize([prop, args]),
+            method: serialize(harden([prop, args])),
           });
           return harden(pr.p);
         },
@@ -126,15 +126,13 @@ export function getCapTP(ourId, send, bootstrapObj = undefined) {
     CTP_CALL(obj) {
       const { questionID, target } = obj;
       const [prop, args] = unserialize(obj.method);
-      const val = unserialize(
-        JSON.stringify({
-          body: {
-            [QCLASS]: 'slot',
-            index: 0,
-          },
-          slots: [target],
+      const val = unserialize({
+        body: JSON.stringify({
+          [QCLASS]: 'slot',
+          index: 0,
         }),
-      );
+        slots: [target],
+      });
       HandledPromise.applyMethod(val, prop, args)
         .then(res =>
           send({
