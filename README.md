@@ -1,4 +1,4 @@
-# Agoric Client Wallet
+# Agoric Cryptoeconomy Client Wallet
 
 **NOTE: Experimental and certainly not ready for production!**
 
