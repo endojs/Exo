@@ -6,11 +6,15 @@ if (require('electron-squirrel-startup')) {
 }
 
 const esmRequire = require('esm')(module);
+let mainP;
 
 // If we are executed with the 'solo' argument, run ag-solo with the rest.
 const args = process.argv.slice(2);
 if (args.length === 0) {
-  require('./src/index.js');
+  console.log('FIGME: Electron app', process.argv);
+  const main = esmRequire('./src/main.js').default;
+  main(process.argv);
+  // Wait for clean app.exit().
 } else if (args[0] === 'solo') {
   args.shift();
   console.log('FIGME: would execute ag-solo', args);
@@ -27,4 +31,15 @@ if (args.length === 0) {
   );
 } else {
   console.log('FIGME: would execute agoric-cli', args);
+  mainP = Promise.resolve(0);
+}
+
+if (mainP) {
+  mainP.then(
+    res => process.exit(res || 0),
+    rej => {
+      console.log(`error running Agoric`, args, rej);
+      process.exit(1);
+    },
+  );
 }
