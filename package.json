@@ -2,7 +2,7 @@
   "name": "@agoric/wallet",
   "productName": "Agoric Wallet",
   "version": "0.1.0",
-  "description": "Agoric cryptoeconomy client wallet",
+  "description": "Agoric cryptoeconomy wallet app",
   "main": "./src/entrypoint.cjs",
   "scripts": {
     "start": "electron-forge start",

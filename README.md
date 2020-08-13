@@ -1,4 +1,4 @@
-# Agoric Cryptoeconomy Client Wallet
+# Agoric Cryptoeconomy Wallet App
 
 **NOTE: Experimental and certainly not ready for production!**
 
