@@ -6,6 +6,7 @@
   "main": "./src/entrypoint.cjs",
   "scripts": {
     "start": "electron-forge start",
+    "rebuild": "sdk=../agoric-sdk; for m in SwingSet cosmic-swingset; do electron-rebuild -m $sdk/packages/$m; done; wait",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish:electron": "electron-forge publish",
@@ -49,6 +50,8 @@
     }
   },
   "dependencies": {
+    "@agoric/cosmic-swingset": "^0.19.0",
+    "agoric": "^0.7.0",
     "electron-squirrel-startup": "^1.0.0",
     "esm": "^3.2.25",
     "update-electron-app": "^1.5.0"

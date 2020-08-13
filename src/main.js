@@ -54,7 +54,7 @@ async function main(argv, isProduction) {
     const { id, args } = obj;
     ev.sender.send('fork-start', { id });
     const [progname, ...restArgs] = args;
-    const entrypoint = path.join(__dirname, progname, 'entrypoint.cjs');
+    const entrypoint = path.join(__dirname, `${progname}.cjs`);
     const cp = fork(entrypoint, restArgs, { detached: true });
     cp.on('close', (code, signal) => ev.sender.send('fork-close', { id, code, signal }))
   });
