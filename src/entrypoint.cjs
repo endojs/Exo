@@ -7,21 +7,10 @@ if (require('electron-squirrel-startup')) {
 }
 
 const args = PRODUCTION ? process.argv.slice(1) : process.argv.slice(2);
-if (args.length && args[0] !== 'app') {
-  // Use the CLI interface.
-  const path = require('path');
-  const ep = path.resolve(__dirname, './agoric-cli.cjs');
-  if (PRODUCTION) {
-    // FIXME: Hack to standardize what agoric-cli entrypoint receives.
-    process.argv = [process.execPath, ep, ...process.argv.slice(1)];
-  }
-  require(ep);
-} else {
-  const esmRequire = require('esm')(module);
-  require('node-lmdb');
+const esmRequire = require('esm')(module);
+require('node-lmdb');
 
-  console.log('FIGME: Electron app', process.argv);
-  const main = esmRequire('./main.js').default;
-  main(process.argv, PRODUCTION);
-  // Wait for clean app.exit().
-}
+console.log('FIGME: Electron app', process.argv);
+const main = esmRequire('./main.js').default;
+main(process.argv, PRODUCTION);
+// Wait for clean app.exit().
