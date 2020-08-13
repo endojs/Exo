@@ -2,7 +2,11 @@ import { app, ipcMain, BrowserWindow } from 'electron';
 import { fork } from 'child_process';
 import path from 'path';
 
-async function main(argv) {
+async function main(argv, isProduction) {
+  // TODO: Use this to automatically download updates on Windows and MacOS.
+  // Requires code signing.
+  // require('update-electron-app')();
+
   const createWindow = () => {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
@@ -19,7 +23,7 @@ async function main(argv) {
     mainWindow.loadFile(path.join(__dirname, '../ui/index.html'));
 
     // Open the DevTools.
-    if (argv.includes('--devtools')) {
+    if (argv.includes('--devtools') || !isProduction) {
       mainWindow.webContents.openDevTools();
     }
   };
@@ -49,7 +53,9 @@ async function main(argv) {
   ipcMain.on('fork', (ev, obj) => {
     const { id, args } = obj;
     ev.sender.send('fork-start', { id });
-    const cp = fork(path.join(__dirname, 'entrypoint.cjs'), args, { detached: true });
+    const [progname, ...restArgs] = args;
+    const entrypoint = path.join(__dirname, progname, 'entrypoint.cjs');
+    const cp = fork(entrypoint, restArgs, { detached: true });
     cp.on('close', (code, signal) => ev.sender.send('fork-close', { id, code, signal }))
   });
 

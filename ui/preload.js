@@ -13,8 +13,8 @@ async function main() {
     const runCli = document.querySelector('#run-cli');
     const runSolo = document.querySelector('#run-solo');
 
-    runSolo.addEventListener('click', () => fork(['solo', 'to-solo']));
-    runCli.addEventListener('click', () => fork(['to-cli']));
+    runSolo.addEventListener('click', () => fork(['ag-solo', 'to-solo']));
+    runCli.addEventListener('click', () => fork(['agoric-cli', 'to-cli']));
   });
 }
 
