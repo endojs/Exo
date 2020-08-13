@@ -10,7 +10,7 @@ let mainP;
 
 // If we are executed with the 'solo' argument, run ag-solo with the rest.
 const args = process.argv.slice(2);
-if (args.length === 0) {
+if (args.length === 0 || args[0] === 'app') {
   console.log('FIGME: Electron app', process.argv);
   const main = esmRequire('./main.js').default;
   main(process.argv);

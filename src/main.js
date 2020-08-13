@@ -19,7 +19,9 @@ async function main(argv) {
     mainWindow.loadFile(path.join(__dirname, '../ui/index.html'));
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    if (argv.includes('--devtools')) {
+      mainWindow.webContents.openDevTools();
+    }
   };
 
   // This method will be called when Electron has finished
@@ -47,7 +49,7 @@ async function main(argv) {
   ipcMain.on('fork', (ev, obj) => {
     const { id, args } = obj;
     ev.sender.send('fork-start', { id });
-    const cp = fork(path.join(__dirname, '../entrypoint.cjs'), args, { detached: true });
+    const cp = fork(path.join(__dirname, 'entrypoint.cjs'), args, { detached: true });
     cp.on('close', (code, signal) => ev.sender.send('fork-close', { id, code, signal }))
   });
 
