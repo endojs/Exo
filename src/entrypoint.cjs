@@ -12,7 +12,7 @@ let mainP;
 const args = process.argv.slice(2);
 if (args.length === 0) {
   console.log('FIGME: Electron app', process.argv);
-  const main = esmRequire('./src/main.js').default;
+  const main = esmRequire('./main.js').default;
   main(process.argv);
   // Wait for clean app.exit().
 } else if (args[0] === 'solo') {

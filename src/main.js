@@ -9,14 +9,14 @@ async function main(argv) {
       width: 800,
       height: 600,
       webPreferences: {
-        preload: path.join(__dirname, 'preload-entry.cjs'),
+        preload: path.join(__dirname, '../ui/preload-entry.cjs'),
         contextIsolation: true,
         worldSafeExecuteJavaScript: true,
       },
     });
 
     // and load the index.html of the app.
-    mainWindow.loadFile(path.join(__dirname, 'index.html'));
+    mainWindow.loadFile(path.join(__dirname, '../ui/index.html'));
 
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
