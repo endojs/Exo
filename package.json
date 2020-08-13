@@ -1,9 +1,9 @@
 {
-  "name": "agoric-app",
-  "productName": "agoric-app",
-  "version": "1.0.0",
+  "name": "@agoric/agoric-app",
+  "productName": "Agoric",
+  "version": "0.1.0",
   "description": "My Electron application description",
-  "main": "entrypoint.cjs",
+  "main": "./src/entrypoint.cjs",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
@@ -12,11 +12,8 @@
     "lint": "echo \"No linting configured\""
   },
   "keywords": [],
-  "author": {
-    "name": "Michael FIG",
-    "email": "mfig@agoric.com"
-  },
-  "license": "MIT",
+  "author": "Agoric",
+  "license": "Apache-2.0",
   "config": {
     "forge": {
       "packagerConfig": {},
@@ -24,14 +21,14 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "agoric_app"
+            "name": "Agoric"
           }
         },
         {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
+          "name": "@electron-forge/maker-dmg",
+          "config": {
+            "name": "Agoric"
+          }
         },
         {
           "name": "@electron-forge/maker-deb",
@@ -53,7 +50,7 @@
     "@electron-forge/maker-deb": "6.0.0-beta.52",
     "@electron-forge/maker-rpm": "6.0.0-beta.52",
     "@electron-forge/maker-squirrel": "6.0.0-beta.52",
-    "@electron-forge/maker-zip": "6.0.0-beta.52",
+    "@electron-forge/maker-dmg": "6.0.0-beta.52",
     "electron": "9.2.0"
   }
 }
