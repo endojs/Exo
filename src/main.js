@@ -5,7 +5,10 @@ import path from 'path';
 async function main(argv, isProduction) {
   // TODO: Use this to automatically download updates on Windows and MacOS.
   // Requires code signing.
-  // require('update-electron-app')();
+  require('update-electron-app')();
+
+  // Needed to display on Ubuntu 2020.04 under Parallels
+  app.disableHardwareAcceleration();
 
   const createWindow = () => {
     // Create the browser window.

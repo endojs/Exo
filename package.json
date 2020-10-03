@@ -4,6 +4,7 @@
   "version": "0.1.1",
   "description": "Agoric cryptoeconomy wallet app",
   "main": "./src/entrypoint.cjs",
+  "repository": "git+ssh://github.com/agoric-labs/agoric-wallet",
   "scripts": {
     "start": "electron-forge start",
     "postinstall": "patch-package&&node scripts/build-sdk.cjs&&electron-rebuild",

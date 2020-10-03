@@ -12,3 +12,7 @@ const ret = spawnSync('go', ['build', '-v', '-ldflags',`\
  -X github.com/cosmos/cosmos-sdk/version.Version=${pjson.version}`,
  '-o', `${__dirname}/../bin/ag-cosmos-helper`,
  './cmd/ag-cosmos-helper'], { cwd: css, stdio: ['inherit', 'inherit', 'inherit'] });
+
+if (ret.error) {
+  throw ret.error;
+}
