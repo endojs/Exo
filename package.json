@@ -1,12 +1,12 @@
 {
   "name": "@agoric/wallet",
   "productName": "Agoric Wallet",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Agoric cryptoeconomy wallet app",
   "main": "./src/entrypoint.cjs",
   "scripts": {
     "start": "electron-forge start",
-    "postinstall": "patch-package&&electron-rebuild",
+    "postinstall": "patch-package&&node scripts/build-sdk.cjs&&electron-rebuild",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish:electron": "electron-forge publish",
@@ -17,7 +17,28 @@
   "license": "Apache-2.0",
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "appCopyright": "Copyright 2020 Agoric Systems Operating Company, Inc.\n\nLicensed under the Apache License, Version 2.0.",
+        "icon": "assets/agoric",
+        "appCategoryType": "public.app-category.finance",
+        "protocols": [
+          {
+            "name": "Agoric Wallet",
+            "schemes": ["agoric-wallet"]
+          }
+        ],
+        "osxSign": {
+          "identity": "Developer ID Application: Michael FIG (38WBP7G9A5)",
+          "hardenedRuntime": true,
+          "entitlements": "build/entitlements.mac.plist",
+          "entitlements-inherit": "build/entitlements.mac.plist",
+          "gatekeeper-assess": false
+        },
+        "osxNotarize": {
+          "appleApiKey": "HSVNKWZHX4",
+          "appleApiIssuer": "4e93f6f3-a08d-4fcc-b8cc-b5cc36f6c557"
+        }
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
@@ -25,7 +46,9 @@
         },
         {
           "name": "@electron-forge/maker-dmg",
-          "config": {}
+          "config": {
+            "sign": false
+          }
         },
         {
           "name": "@electron-forge/maker-deb",
@@ -33,6 +56,10 @@
         },
         {
           "name": "@electron-forge/maker-rpm",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-snap",
           "config": {}
         }
       ],
@@ -50,20 +77,21 @@
     }
   },
   "dependencies": {
-    "@agoric/cosmic-swingset": "^0.20.1",
-    "agoric": "^0.8.0",
+    "@agoric/cosmic-swingset": "^0.21.1-dev.2",
+    "agoric": "^0.9.1-dev.2",
     "electron-squirrel-startup": "^1.0.0",
     "esm": "^3.2.25",
     "patch-package": "^6.2.2",
     "update-electron-app": "^1.5.0"
   },
   "devDependencies": {
-    "@electron-forge/cli": "6.0.0-beta.52",
-    "@electron-forge/maker-deb": "6.0.0-beta.52",
-    "@electron-forge/maker-dmg": "6.0.0-beta.52",
-    "@electron-forge/maker-rpm": "6.0.0-beta.52",
-    "@electron-forge/maker-squirrel": "6.0.0-beta.52",
-    "@electron-forge/publisher-github": "6.0.0-beta.52",
-    "electron": "9.2.0"
+    "@electron-forge/cli": "6.0.0-beta.53",
+    "@electron-forge/maker-deb": "6.0.0-beta.53",
+    "@electron-forge/maker-dmg": "6.0.0-beta.53",
+    "@electron-forge/maker-rpm": "6.0.0-beta.53",
+    "@electron-forge/maker-snap": "6.0.0-beta.53",
+    "@electron-forge/maker-squirrel": "6.0.0-beta.53",
+    "@electron-forge/publisher-github": "6.0.0-beta.53",
+    "electron": "10.1.3"
   }
 }

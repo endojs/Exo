@@ -1,5 +1,9 @@
 // ag-solo entrypoint
 const esmRequire = require('esm')(module);
+const path = require('path');
+
+// Add our bin directory to the path, so we can find our ag-cosmos-helper
+process.env.PATH = `${path.join(__dirname, '..', 'bin')}${path.delimiter}${process.env.PATH}`;
 
 // If you see:
 // /Users/michael/agoric/agoric-sdk/node_modules/depd/index.js:1
