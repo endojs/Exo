@@ -907,17 +907,16 @@
   dependencies:
     "@electron-forge/shared-types" "6.0.0-beta.53"
 
-"@electron-forge/publisher-github@^6.0.0-beta.53":
+"@electron-forge/publisher-github@file:assets/electron-forge-publisher-github-v6.0.0-beta.53.tgz":
   version "6.0.0-beta.53"
-  resolved "https://registry.yarnpkg.com/@electron-forge/publisher-github/-/publisher-github-6.0.0-beta.53.tgz#3cd065c2b7fb647cd27a3fbe99426410650738ad"
-  integrity sha512-rxDrOU8ji9eJsQTX1yZM/cBzAg0NqManr9iOX56H9bKkQsmCu0VXBY190l49XzxN+/QF1h079pxwVGyd+cU/ow==
+  resolved "file:assets/electron-forge-publisher-github-v6.0.0-beta.53.tgz#d706391c92e587d703fa96f1a8d9c59c03954212"
   dependencies:
     "@electron-forge/async-ora" "6.0.0-beta.53"
     "@electron-forge/publisher-base" "6.0.0-beta.53"
     "@electron-forge/shared-types" "6.0.0-beta.53"
     "@octokit/core" "^3.1.2"
-    "@octokit/rest" "^18.0.1"
-    "@octokit/types" "^5.4.1"
+    "@octokit/rest" "^18.0.6"
+    "@octokit/types" "^5.5.0"
     fs-extra "^9.0.1"
     lodash "^4.17.20"
     mime-types "^2.1.25"
@@ -1081,7 +1080,7 @@
     once "^1.4.0"
     universal-user-agent "^6.0.0"
 
-"@octokit/rest@^18.0.1":
+"@octokit/rest@^18.0.6":
   version "18.0.6"
   resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-18.0.6.tgz#76c274f1a68f40741a131768ef483f041e7b98b6"
   integrity sha512-ES4lZBKPJMX/yUoQjAZiyFjei9pJ4lTTfb9k7OtYoUzKPDLl/M8jiHqt6qeSauyU4eZGLw0sgP1WiQl9FYeM5w==
@@ -1098,7 +1097,7 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@octokit/types@^5.0.0", "@octokit/types@^5.0.1", "@octokit/types@^5.4.1", "@octokit/types@^5.5.0":
+"@octokit/types@^5.0.0", "@octokit/types@^5.0.1", "@octokit/types@^5.5.0":
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/@octokit/types/-/types-5.5.0.tgz#e5f06e8db21246ca102aa28444cdb13ae17a139b"
   integrity sha512-UZ1pErDue6bZNjYOotCNveTXArOMZQFG6hKJfOnGnulVCMcVVi7YIIuuR4WfBhjo7zgpmzn/BkPDnUXtNx+PcQ==
