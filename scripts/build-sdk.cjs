@@ -5,6 +5,7 @@ const path = require('path');
 const css = `${__dirname}/../node_modules/@agoric/cosmic-swingset`;
 const pjson = require('@agoric/cosmic-swingset/package.json');
 
+console.log('Compiling bin/ag-cosmos-helper with Go...');
 const ret = spawnSync('go', ['build', '-v', '-ldflags',`\
  -X github.com/cosmos/cosmos-sdk/version.Name=${pjson.name}\
  -X github.com/cosmos/cosmos-sdk/version.ServerName=ag-chain-cosmos\

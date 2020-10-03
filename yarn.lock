@@ -710,7 +710,7 @@
     ora "^5.0.0"
     pretty-ms "^7.0.0"
 
-"@electron-forge/cli@6.0.0-beta.53":
+"@electron-forge/cli@^6.0.0-beta.53":
   version "6.0.0-beta.53"
   resolved "https://registry.yarnpkg.com/@electron-forge/cli/-/cli-6.0.0-beta.53.tgz#a5cbe3cb62749f16fd508fdaa7356a4ca14699ad"
   integrity sha512-+ZtttPDCp7I7KKyvj1r52TM/AZpQRYuPM8X6IjBzgiryJ7BUDyZmsNtjuJtiRH0H9q1HGEUoD6RWFZVLhSEaXQ==
@@ -841,7 +841,7 @@
     fs-extra "^9.0.1"
     which "^2.0.2"
 
-"@electron-forge/maker-deb@6.0.0-beta.53":
+"@electron-forge/maker-deb@^6.0.0-beta.53":
   version "6.0.0-beta.53"
   resolved "https://registry.yarnpkg.com/@electron-forge/maker-deb/-/maker-deb-6.0.0-beta.53.tgz#264b75e4b1467c6aa8aa11ac4d23dbd27a10b017"
   integrity sha512-bKhfLFY0qfUUPTYuGiU8N4dJKIjWpDeJlE3oP6h49O5GSHwx/eEjQRS2ckT+410HQ3WYXpZFzVc4A8bUz5ej0Q==
@@ -851,7 +851,7 @@
   optionalDependencies:
     electron-installer-debian "^3.0.0"
 
-"@electron-forge/maker-dmg@6.0.0-beta.53":
+"@electron-forge/maker-dmg@^6.0.0-beta.53":
   version "6.0.0-beta.53"
   resolved "https://registry.yarnpkg.com/@electron-forge/maker-dmg/-/maker-dmg-6.0.0-beta.53.tgz#8e3881e58b3b4393a698a24c60a3785c57165683"
   integrity sha512-jG5KdSKAPuTITDn7tXQV6X12Olmijf4gW6twW2MuebJyO8zNgsNhPQMyAIcHye7t7P3nPqSyk7SCFJzgC+s4oA==
@@ -862,7 +862,7 @@
   optionalDependencies:
     electron-installer-dmg "^3.0.0"
 
-"@electron-forge/maker-rpm@6.0.0-beta.53":
+"@electron-forge/maker-rpm@^6.0.0-beta.53":
   version "6.0.0-beta.53"
   resolved "https://registry.yarnpkg.com/@electron-forge/maker-rpm/-/maker-rpm-6.0.0-beta.53.tgz#a7d888c688508b9f7eaac59e693bf291cf5e1d17"
   integrity sha512-tKL1yYVS6uY7XsuJX8JKQGLtdXDjrr1R8S2JnvvaZ3fT+oDQ0vdptcjQ1QqVTzKNN3VDOI46kLG5gyLVNSl4wQ==
@@ -872,7 +872,7 @@
   optionalDependencies:
     electron-installer-redhat "^3.2.0"
 
-"@electron-forge/maker-snap@6.0.0-beta.53":
+"@electron-forge/maker-snap@^6.0.0-beta.53":
   version "6.0.0-beta.53"
   resolved "https://registry.yarnpkg.com/@electron-forge/maker-snap/-/maker-snap-6.0.0-beta.53.tgz#013ade9655644fa143011b2c2dd8a19383445022"
   integrity sha512-h0DdvQcCOJPig4MSHYyF5O8nG6/0GI47hnHEsSGpmOe0Ir4KBzjmfWgOHkOBxcXfhBzIBsecgHvi/pU83FTVdQ==
@@ -882,7 +882,7 @@
   optionalDependencies:
     electron-installer-snap "^5.1.0"
 
-"@electron-forge/maker-squirrel@6.0.0-beta.53":
+"@electron-forge/maker-squirrel@^6.0.0-beta.53":
   version "6.0.0-beta.53"
   resolved "https://registry.yarnpkg.com/@electron-forge/maker-squirrel/-/maker-squirrel-6.0.0-beta.53.tgz#c34aa0e39a64d25dbd3e31b86f2927cb02fbfe5a"
   integrity sha512-CoaJPFrxWnOHOgWAmit9OtnBD/JqUPy1hGrMugrjmRvR4xQNQU5mHF2oeY2dQlgYg2Ecdiw1Rf4o8qI/KXu/RQ==
@@ -907,7 +907,7 @@
   dependencies:
     "@electron-forge/shared-types" "6.0.0-beta.53"
 
-"@electron-forge/publisher-github@6.0.0-beta.53":
+"@electron-forge/publisher-github@^6.0.0-beta.53":
   version "6.0.0-beta.53"
   resolved "https://registry.yarnpkg.com/@electron-forge/publisher-github/-/publisher-github-6.0.0-beta.53.tgz#3cd065c2b7fb647cd27a3fbe99426410650738ad"
   integrity sha512-rxDrOU8ji9eJsQTX1yZM/cBzAg0NqManr9iOX56H9bKkQsmCu0VXBY190l49XzxN+/QF1h079pxwVGyd+cU/ow==
