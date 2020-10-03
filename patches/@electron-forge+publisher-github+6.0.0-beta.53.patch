@@ -1,0 +1,13 @@
+diff --git a/node_modules/@electron-forge/publisher-github/dist/util/github.js b/node_modules/@electron-forge/publisher-github/dist/util/github.js
+index 5cbe17a..9580bbd 100644
+--- a/node_modules/@electron-forge/publisher-github/dist/util/github.js
++++ b/node_modules/@electron-forge/publisher-github/dist/util/github.js
+@@ -15,8 +15,6 @@ require("source-map-support/register");
+ 
+ var _rest = require("@octokit/rest");
+ 
+-var _types = require("@octokit/core/dist-types/types.d");
+-
+ var _lodash = require("lodash");
+ 
+ function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
