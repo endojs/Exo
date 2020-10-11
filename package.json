@@ -81,6 +81,7 @@
     "agoric": "^0.9.1-dev.2",
     "electron-squirrel-startup": "^1.0.0",
     "esm": "^3.2.25",
+    "node-lmdb": "^0.9.4",
     "update-electron-app": "^1.5.0"
   },
   "devDependencies": {
