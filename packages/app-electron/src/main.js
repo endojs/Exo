@@ -10,7 +10,7 @@ async function main(argv, isProduction) {
   // Requires code signing.
   require('update-electron-app')();
 
-  require('electron-reload')(path.dirname(path.dirname(__dirname)), {
+  require('electron-reload')(path.join(__dirname, '../../..'), {
     electron: path.join(__dirname, '../node_modules', '.bin', 'electron'),
     awaitWriteFinish: true,
   });
@@ -45,22 +45,8 @@ async function main(argv, isProduction) {
       if (channel !== 'host') {
         return;
       }
-      switch (obj.type) {
-        case 'hello': {
-          const reply = await E(appPlugin).hello(obj.data);
-          send(reply);
-          break;
-        }
-        case 'fork': {
-          E(appPlugin).fork(...obj.data);
-          break;
-        }
-        default: {
-          // CapTP integration.
-          dispatch(obj) || abort(Error(`Message ${obj.type} not understood`));
-          break;
-        }
-      }
+      // CapTP integration.
+      dispatch(obj) || abort(Error(`Message ${obj.type} not understood`));
     });
 
     // and load the index.html of the app.

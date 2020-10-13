@@ -12,7 +12,7 @@ export function makePostMessage({ onOpen, onMessage, onClose }) {
   console.log('connected');
   const handleMessage = ev => {
     if (ev.data && ev.data.type === 'fromHost') {
-      console.log('receive', ev.data.data);
+      // console.log('receive', ev.data.data);
       onMessage({ data: JSON.stringify(ev.data.data) });
     }
   };
@@ -33,7 +33,7 @@ export function makePostMessage({ onOpen, onMessage, onClose }) {
   }
 
   const sendMessage = obj => {
-    console.log('sending', obj);
+    // console.log('sending', obj);
     window.postMessage({ type: 'toHost', data: obj }, '*');
   };
 

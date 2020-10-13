@@ -3,13 +3,16 @@
   import { E } from '@agoric/eventual-send';
 
   import Button from 'smelte/src/components/Button';
+  import Dialog from 'smelte/src/components/Dialog';
   import { connected, ready, appP } from './store';
   
   import ListItems from '../lib/ListItems.svelte';
   import MenuButton from '../lib/MenuButton.svelte';
   import DefaultButton from '../lib/DefaultButton.svelte';
+  import CancelButton from '../lib/CancelButton.svelte';
 
   import Config from './Config.svelte';
+  import CommandTerminal from './CommandTerminal.svelte';
 
   const menu = [
     { id: 'main', text: 'Main' },
@@ -26,8 +29,29 @@
   $: connectAction = $connected ? connected.disconnect : connected.connect;
 
   let nickname = '';
+  let runningProcess = null;
 
-  const sayHello = () => E(appP).hello(nickname).then(r => alert(r), r => alert(r));
+  const sayHello = () => E(appP).hello(nickname || 'friend').then(r => alert(r), r => alert(r));
+  const handleHelloKeyup = ev => {
+    if (ev.key === 'Enter') {
+      sayHello();
+    }
+  };
+
+  const forked = {};
+  const fork = (title, ...args) => {
+    if (!forked[title]) {
+      forked[title] = { actions: E(appP).fork(...args), title, value: '' };
+    }
+    runningProcess = forked[title];
+  };
+  const terminate = name => {
+    if (!forked[name]) {
+      return;
+    }
+    E(forked[name].actions).kill();
+    delete forked[name];
+  };
 </script>
 
 <style>
@@ -200,13 +224,23 @@
 
   <main>
     {#if navPanel === 'main'}
-    <div>Greet <input id="nickname" bind:value="{nickname}" placeholder="friend" />
-      <DefaultButton on:click={sayHello}>Say Hello</DefaultButton></div>
+    <div>Greet <input id="nickname" bind:value="{nickname}" placeholder="friend" on:keyup={handleHelloKeyup} />
+      <Button on:click={sayHello}>Say Hello</Button></div>
     <div></div>
-    <Button on:click={() => E(appP).fork('ag-solo', 'to-solo')}>Run Solo</Button>
-    <Button on:click={() => E(appP).fork('agoric-cli', 'to-cli')}>Run CLI</Button>
+    <Button on:click={() => fork('Agoric Server', 'ag-solo', 'to-solo')}>Solo</Button>
+    <Button on:click={() => fork('Agoric Client', 'agoric-cli', 'to-cli')}>CLI</Button>
+    <Button on:click={() => fork('Catenate', 'cat')}>Cat</Button>
     {/if}
   </main>
+
+  <Dialog bind:value={runningProcess}>
+    <h5 slot="title">{runningProcess.title}</h5>
+    <CommandTerminal actions={runningProcess.actions} bind:value={runningProcess.value} />
+    <div slot="actions">
+      <CancelButton on:click={() => runningProcess = null} />
+      <Button on:click={() => { terminate(runningProcess.title); runningProcess = null }}>Terminate</Button>
+    </div>
+  </Dialog>
 
   <footer>
     <div class={navPanel === "setup" ? "theme" : "theme-hidden"}>
