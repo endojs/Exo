@@ -1,4 +1,6 @@
-import { app, ipcMain, BrowserWindow } from 'electron';
+import '@agoric/install-ses';
+import { makeCapTP } from '@agoric/captp';
+import { app, BrowserWindow } from 'electron';
 import { fork } from 'child_process';
 import path from 'path';
 
@@ -29,6 +31,45 @@ async function main(argv, isProduction) {
     if (argv.includes('--devtools') || !isProduction) {
       mainWindow.webContents.openDevTools();
     }
+
+    const send = obj => {
+      // console.log('FIGME: main posting', obj);
+      mainWindow.webContents.send('host', obj);
+    };
+
+    // Construct a CapTP channel.
+    const bootstrapObj = {
+      hello(nickname) {
+        return `Hello, ${nickname}!`;
+      },
+      fork(progname, ...restArgs) {
+        const entrypoint = path.join(__dirname, `${progname}.cjs`);
+        const cp = fork(entrypoint, restArgs, { detached: true });
+      },
+    };
+    const { dispatch, abort } = makeCapTP('renderer', send, bootstrapObj);
+
+    mainWindow.webContents.on('ipc-message', (ev, channel, obj) => {
+      // console.log('FIGME: main received on', channel, obj);
+      if (channel !== 'host') {
+        return;
+      }
+      switch (obj.type) {
+        case 'hello': {
+          send(bootstrapObj.hello(obj.data));
+          break;
+        }
+        case 'fork': {
+          bootstrapObj.fork(...obj.data);
+          break;
+        }
+        default: {
+          // CapTP integration.
+          dispatch(obj) || abort(Error(`Message ${obj.type} not understood`));
+          break;
+        }
+      }
+    });
   };
 
   // This method will be called when Electron has finished
@@ -51,15 +92,6 @@ async function main(argv, isProduction) {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
-  });
-
-  ipcMain.on('fork', (ev, obj) => {
-    const { id, args } = obj;
-    ev.sender.send('fork-start', { id });
-    const [progname, ...restArgs] = args;
-    const entrypoint = path.join(__dirname, `${progname}.cjs`);
-    const cp = fork(entrypoint, restArgs, { detached: true });
-    cp.on('close', (code, signal) => ev.sender.send('fork-close', { id, code, signal }))
   });
 
   // In this file you can include the rest of your app's specific main process

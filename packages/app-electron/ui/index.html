@@ -9,7 +9,31 @@
   <body>
     <h1>💖 Hello World!</h1>
     <p>Welcome to your Electron application.</p>
-    <button id="run-solo">Run Solo</button>
-    <button id="run-cli">Run CLI</button>
+    <p>Your name: <input id="nickname" placeholder="friend" />
+    <button id="say-hello">Say Hello</button></p>
+    <button id="run-solo" onclick="E(host).fork('ag-solo', 'to-solo')">Run Solo</button>
+    <button id="run-cli" onclick="E(host).fork('agoric-cli', 'to-cli')">Run CLI</button>
+    <script type="text/javascript">
+      const E = x => x;
+      const send = obj => {
+        console.log('send', obj);
+        window.postMessage({ type: 'toHost', data: obj }, '*');
+      };
+      const host = {
+        fork(...args) {
+          send({ type: 'fork', data: args });
+        },
+      };
+      const sayHello = document.querySelector('#say-hello');
+      const nickname = document.querySelector('#nickname');
+      window.addEventListener('message', ev => {
+        if (ev.data && ev.data.type === 'fromHost') {
+          console.log('recv', ev.data.data);
+        }
+      });
+      sayHello.addEventListener('click', ev => {
+        send({ type: 'hello', data: nickname.value || 'friend' });
+      });
+    </script>
   </body>
 </html>
