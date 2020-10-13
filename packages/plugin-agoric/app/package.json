@@ -1,0 +1,27 @@
+{
+  "name": "@pledger/plugin-agoric-app",
+  "version": "0.1.0",
+  "description": "Pledger plugin for Agoric's cryptoeconomy",
+  "repository": "git+ssh://github.com/Agoric/Pledger",
+  "private": true,
+  "workspaces": {
+    "nohoist": ["**"]
+  },
+  "scripts": {
+    "postinstall": "patch-package&&node scripts/build-sdk.cjs&&electron-rebuild",
+    "lint": "echo \"No linting configured\""
+  },
+  "keywords": [],
+  "author": "Agoric",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@agoric/cosmic-swingset": "^0.22.0",
+    "agoric": "^0.10.0",
+    "node-lmdb": "^0.9.4",
+    "re2": "^1.15.6"
+  },
+  "devDependencies": {
+    "esm": "^3.2.25",
+    "patch-package": "^6.2.2"
+  }
+}

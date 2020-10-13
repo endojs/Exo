@@ -1,0 +1,10 @@
+{
+  "name": "@pledger/plugin-agoric",
+  "version": "0.1.0",
+  "description": "Agoric cryptoeconomy (Pledger plugin)",
+  "main": "index.js",
+  "repository": "git+ssh://github.com/Agoric/Pledger",
+  "author": "Agoric",
+  "license": "Apache-2.0",
+  "private": false
+}

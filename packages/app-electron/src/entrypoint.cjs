@@ -8,7 +8,7 @@ if (require('electron-squirrel-startup')) {
 
 const args = PRODUCTION ? process.argv.slice(1) : process.argv.slice(2);
 const esmRequire = require('esm')(module);
-require('node-lmdb');
+// require('node-lmdb');
 
 console.log('FIGME: Electron app', process.argv, `PRODUCTION=${PRODUCTION}`);
 const main = esmRequire('./main.js').default;

@@ -1,8 +1,9 @@
 import '@agoric/install-ses';
-import { makeCapTP } from '@agoric/captp';
+import { makeCapTP, E } from '@agoric/captp';
 import { app, BrowserWindow } from 'electron';
-import { fork } from 'child_process';
 import path from 'path';
+
+import { bootPlugin as bootAppPlugin } from '@pledger/plugin-agoric/app/src/server';
 
 async function main(argv, isProduction) {
   // TODO: Use this to automatically download updates on Windows and MacOS.
@@ -12,55 +13,50 @@ async function main(argv, isProduction) {
   // Needed to display on Ubuntu 2020.04 under Parallels
   app.disableHardwareAcceleration();
 
-  const createWindow = () => {
+  const createWindow = async () => {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
       width: 800,
       height: 600,
       webPreferences: {
-        preload: path.join(__dirname, '../ui/preload-entry.cjs'),
+        preload: path.join(__dirname, 'preload-entry.cjs'),
         contextIsolation: true,
         worldSafeExecuteJavaScript: true,
       },
     });
-
-    // and load the index.html of the app.
-    mainWindow.loadFile(path.join(__dirname, '../ui/index.html'));
 
     // Open the DevTools.
     if (argv.includes('--devtools') || !isProduction) {
       mainWindow.webContents.openDevTools();
     }
 
+    // Construct a CapTP channel.
+    const appPlugin = bootAppPlugin({});
+
+    // and load the index.html of the app.
+    const uiIndex = await E(appPlugin).getUiIndex();
+    await mainWindow.loadFile(uiIndex);
+
     const send = obj => {
       // console.log('FIGME: main posting', obj);
       mainWindow.webContents.send('host', obj);
     };
 
-    // Construct a CapTP channel.
-    const bootstrapObj = {
-      hello(nickname) {
-        return `Hello, ${nickname}!`;
-      },
-      fork(progname, ...restArgs) {
-        const entrypoint = path.join(__dirname, `${progname}.cjs`);
-        const cp = fork(entrypoint, restArgs, { detached: true });
-      },
-    };
-    const { dispatch, abort } = makeCapTP('renderer', send, bootstrapObj);
+    const { dispatch, abort } = makeCapTP('renderer', send, appPlugin);
 
-    mainWindow.webContents.on('ipc-message', (ev, channel, obj) => {
+    mainWindow.webContents.on('ipc-message', async (ev, channel, obj) => {
       // console.log('FIGME: main received on', channel, obj);
       if (channel !== 'host') {
         return;
       }
       switch (obj.type) {
         case 'hello': {
-          send(bootstrapObj.hello(obj.data));
+          const reply = await E(appPlugin).hello(obj.data);
+          send(reply);
           break;
         }
         case 'fork': {
-          bootstrapObj.fork(...obj.data);
+          E(appPlugin).fork(...obj.data);
           break;
         }
         default: {
