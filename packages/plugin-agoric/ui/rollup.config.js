@@ -34,7 +34,7 @@ export default {
     sourcemap: true,
     format: 'iife',
     name: 'app',
-    file: 'public/wallet/build/bundle.js'
+    file: 'public/build/bundle.js'
   },
   plugins: [
     svelte({
@@ -43,7 +43,7 @@ export default {
       // we'll extract any component CSS out into
       // a separate file - better for performance
       css: css => {
-        css.write('public/wallet/build/bundle.css');
+        css.write('public/build/bundle.css');
       }
     }),
 
@@ -72,7 +72,7 @@ export default {
 
     smelte({
       purge: production,
-      output: 'public/wallet/build/smelte.css', // it defaults to static/global.css which is probably what you expect in Sapper
+      output: 'public/build/smelte.css', // it defaults to static/global.css which is probably what you expect in Sapper
       postcss: [], // Your PostCSS plugins
       whitelist: [], // Array of classnames whitelisted from purging
       whitelistPatterns: [

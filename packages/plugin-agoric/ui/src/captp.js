@@ -9,7 +9,7 @@ export function makeCapTPConnection(makeConnection, { onReset }) {
   // a new promise kit when we reset our state.
   let bootPK = makePromiseKit();
   let dispatch;
-  let abort;
+  let abort = () => {};
 
   // Stable identity for the connection handler.
   function onMessage(event) {
@@ -28,7 +28,7 @@ export function makeCapTPConnection(makeConnection, { onReset }) {
   // Stable identity for the connection handler.
   async function onOpen(event) {
     const { abort: ctpAbort, dispatch: ctpDispatch, getBootstrap } =
-      makeCapTP('@agoric/dapp-svelte-wallet-ui', sendMessage);
+      makeCapTP('@pledger/plugin-agoric-ui', sendMessage);
     abort = ctpAbort;
     dispatch = ctpDispatch;
 

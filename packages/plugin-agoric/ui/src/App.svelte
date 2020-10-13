@@ -3,25 +3,19 @@
   import { E } from '@agoric/eventual-send';
 
   import Button from 'smelte/src/components/Button';
-  import Dapps from './Dapps.svelte';
-  import Payments from './Payments.svelte';
-  import Issuers from './Issuers.svelte';
-  import Contacts from './Contacts.svelte';
-  import Purses from './Purses.svelte';
-  import Config from './Config.svelte';
-  import Transactions from './Transactions.svelte';
-  import { connected, ready } from './store';
-
+  import { connected, ready, appP } from './store';
+  
   import ListItems from '../lib/ListItems.svelte';
   import MenuButton from '../lib/MenuButton.svelte';
+  import DefaultButton from '../lib/DefaultButton.svelte';
+
+  import Config from './Config.svelte';
 
   const menu = [
-    { id: 'inbox', text: 'Inbox' },
-    { id: 'transfers', text: 'Transfers' },
-    { id: 'setup', text: 'Setup' },
+    { id: 'main', text: 'Main' },
   ];
 
-  let navPanel = 'inbox';
+  let navPanel = 'main';
 
   import { ThemeWrapper } from 'svelte-themer';
 
@@ -30,6 +24,10 @@
   $: connectStatus = $connected ? 'Connected' : 'Disconnected';
   $: connectLabel = $connected ? 'Disconnect' : 'Connect';
   $: connectAction = $connected ? connected.disconnect : connected.connect;
+
+  let nickname = '';
+
+  const sayHello = () => E(appP).hello(nickname).then(r => alert(r), r => alert(r));
 </script>
 
 <style>
@@ -162,7 +160,7 @@
 </style>
 
 <svelte:head>
-  <title>Agoric Wallet</title>
+  <title>Pledger</title>
 </svelte:head>
 
 <ThemeWrapper>
@@ -201,45 +199,12 @@
   {/if}
 
   <main>
-    {#if navPanel === 'transfers'}
-      <div class="full">
-        <Purses />
-      </div>
-      <div class="full">
-        <Contacts />
-      </div>
-      <!-- <div class="history">
-          <History />
-        </div> -->
-    {:else if navPanel === 'setup'}
-      <!-- Issuers
-          Payees
-          Apps
-          Instances
-          Installations -->
-      <div class="dapps">
-        <Dapps />
-      </div>
-      <div class="issuers">
-        <Issuers />
-      </div>
-      <div class="full">
-        <Contacts />
-      </div>
-    {:else}
-      <!-- inbox -->
-      <div class="full">
-        <Transactions />
-      </div>
-      <div class="payments">
-        <Payments />
-      </div>
-      <div class="dapps">
-        <Dapps />
-      </div>
-      <div class="transfers">
-        <Purses />
-      </div>
+    {#if navPanel === 'main'}
+    <div>Greet <input id="nickname" bind:value="{nickname}" placeholder="friend" />
+      <DefaultButton on:click={sayHello}>Say Hello</DefaultButton></div>
+    <div></div>
+    <Button on:click={() => E(appP).fork('ag-solo', 'to-solo')}>Run Solo</Button>
+    <Button on:click={() => E(appP).fork('agoric-cli', 'to-cli')}>Run CLI</Button>
     {/if}
   </main>
 

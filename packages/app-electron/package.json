@@ -7,12 +7,13 @@
   "main": "./src/entrypoint.cjs",
   "repository": "git+ssh://github.com/Agoric/Pledger",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "concurrently \"npm:ui-dev\" \"electron-forge start\"",
     "postinstall": "ln -sf ../../../node_modules/electron node_modules/",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish:electron": "electron-forge publish",
-    "lint": "echo \"No linting configured\""
+    "lint": "echo \"No linting configured\"",
+    "ui-dev": "cd ../plugin-agoric/ui&&yarn dev"
   },
   "keywords": [],
   "author": "Agoric",
@@ -21,14 +22,14 @@
     "forge": {
       "packagerConfig": {
         "appCopyright": "Copyright 2020 Agoric Systems Operating Company, Inc.\n\nLicensed under the Apache License, Version 2.0.",
-        "executableName": "agoric-wallet",
+        "executableName": "pledger",
         "icon": "assets/agoric",
-        "appCategoryType": "public.app-category.finance",
+        "appCategoryType": "public.app-category.misc",
         "protocols": [
           {
-            "name": "Agoric Wallet",
+            "name": "Pledger",
             "schemes": [
-              "agoric-wallet"
+              "pledger"
             ]
           }
         ],
@@ -69,7 +70,7 @@
           "name": "@electron-forge/publisher-github",
           "config": {
             "repository": {
-              "name": "agoric-app",
+              "name": "Pledger",
               "owner": "agoric-labs"
             }
           }
@@ -79,6 +80,8 @@
   },
   "dependencies": {
     "@agoric/install-ses": "^0.3.2",
+    "@pledger/plugin-agoric": "^0.1.0",
+    "electron-reload": "^1.5.0",
     "electron-squirrel-startup": "^1.0.0",
     "esm": "^3.2.25",
     "update-electron-app": "^1.5.0"
@@ -91,6 +94,7 @@
     "@electron-forge/maker-snap": "^6.0.0-beta.53",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.53",
     "@electron-forge/publisher-github": "file:assets/electron-forge-publisher-github-v6.0.0-beta.53.tgz",
+    "concurrently": "^5.3.0",
     "electron": "10.1.3"
   }
 }

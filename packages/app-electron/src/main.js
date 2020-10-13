@@ -10,6 +10,11 @@ async function main(argv, isProduction) {
   // Requires code signing.
   require('update-electron-app')();
 
+  require('electron-reload')(path.dirname(path.dirname(__dirname)), {
+    electron: path.join(__dirname, '../node_modules', '.bin', 'electron'),
+    awaitWriteFinish: true,
+  });
+
   // Needed to display on Ubuntu 2020.04 under Parallels
   app.disableHardwareAcceleration();
 
@@ -25,17 +30,8 @@ async function main(argv, isProduction) {
       },
     });
 
-    // Open the DevTools.
-    if (argv.includes('--devtools') || !isProduction) {
-      mainWindow.webContents.openDevTools();
-    }
-
     // Construct a CapTP channel.
     const appPlugin = bootAppPlugin({});
-
-    // and load the index.html of the app.
-    const uiIndex = await E(appPlugin).getUiIndex();
-    await mainWindow.loadFile(uiIndex);
 
     const send = obj => {
       // console.log('FIGME: main posting', obj);
@@ -66,6 +62,10 @@ async function main(argv, isProduction) {
         }
       }
     });
+
+    // and load the index.html of the app.
+    const uiIndex = await E(appPlugin).getUiIndex();
+    await mainWindow.loadFile(uiIndex);
   };
 
   // This method will be called when Electron has finished

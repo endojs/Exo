@@ -12,7 +12,7 @@ export const bootPlugin = ({ getState, setState }) => {
       const cp = fork(entrypoint, restArgs, { detached: true });
     },
     getUiIndex() {
-      return path.join(__dirname, '../../ui/old/index.html');
+      return path.join(__dirname, '../../ui/public/index.html');
     },
   });
 };

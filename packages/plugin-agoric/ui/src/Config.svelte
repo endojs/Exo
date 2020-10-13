@@ -1,10 +1,7 @@
 <script>
   import { ThemeToggle } from 'svelte-themer';
 
-  import Icon from "smelte/src/components/Icon";
   import Card from "smelte/src/components/Card";
-
-  import { dapps } from './store';
 </script>
 
 <style>
