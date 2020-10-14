@@ -33,6 +33,9 @@ async function main(argv, isProduction) {
     // Construct a CapTP channel.
     const appPlugin = bootAppPlugin({});
 
+    // Dispose of the plugin when we're closed.
+    mainWindow.on('closed', () => E(appPlugin).dispose());
+
     const send = obj => {
       // console.log('FIGME: main posting', obj);
       mainWindow.webContents.send('host', obj);

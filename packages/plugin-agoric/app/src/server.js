@@ -1,16 +1,22 @@
 import { fork } from 'child_process';
 import path from 'path';
 import { makeNotifierKit } from '@agoric/notifier';
+import { getAccessToken } from '@agoric/cosmic-swingset/lib/ag-solo/access-token.js';
 
 export const bootPlugin = ({ getState, setState }) => {
+  const idToChild = new Map();
   return harden({
     hello(nickname) {
-      return `Hello, ${nickname}!`;
+      return `Hello again, ${nickname}!`;
     },
-    fork(progname, ...restArgs) {
+    getAccessToken,
+    fork(id, progname, ...restArgs) {
+      if (idToChild.has(id)) {
+        return idToChild.get(id);
+      }
       const base = path.basename(progname);
       const entrypoint = path.join(__dirname, 'forks', `${base}.cjs`);
-      const cp = fork(entrypoint, restArgs, { detached: true, stdio: 'pipe' });
+      const cp = fork(entrypoint, restArgs, { stdio: 'pipe' });
 
       const consoleData = [];
       const { notifier, updater } = makeNotifierKit([...consoleData]);
@@ -25,6 +31,7 @@ export const bootPlugin = ({ getState, setState }) => {
       };
 
       cp.on('close', (code, signal) => {
+        idToChild.delete(id);
         addToConsole('exit', { code, signal });
         // Allow the finisher to freeze the data.
         updater.finish([...consoleData]);
@@ -32,7 +39,7 @@ export const bootPlugin = ({ getState, setState }) => {
 
       cp.stderr.on('data', chunk => addToConsole('stderr', chunk.toString('latin1')));
       cp.stdout.on('data', chunk => addToConsole('stdout', chunk.toString('latin1')));
-      return harden({
+      const child = harden({
         kill(sig = 'SIGTERM') {
           process.kill(cp.pid, sig);
         },
@@ -52,9 +59,16 @@ export const bootPlugin = ({ getState, setState }) => {
           return notifier;
         },
       });
+      idToChild.set(id, child);
+      return child;
     },
     getUiIndex() {
       return path.join(__dirname, '../../ui/public/index.html');
     },
+    dispose() {
+      for (const child of idToChild.values()) {
+        E(child).kill();
+      }
+    }
   });
 };

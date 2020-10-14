@@ -38,19 +38,13 @@
     }
   };
 
-  const forked = {};
-  const fork = (title, ...args) => {
-    if (!forked[title]) {
-      forked[title] = { actions: E(appP).fork(...args), title, value: '' };
-    }
-    runningProcess = forked[title];
+  const fork = async (title, ...args) => {
+    runningProcess = { actions: E(appP).fork(title, ...args), title, value: '' };
   };
-  const terminate = name => {
-    if (!forked[name]) {
-      return;
-    }
-    E(forked[name].actions).kill();
-    delete forked[name];
+
+  const launchWallet = async (port = 8000) => {
+    const accessToken = await E(appP).getAccessToken(port);
+    alert(`accessToken=${accessToken}`);
   };
 </script>
 
@@ -228,11 +222,10 @@
       <Button on:click={sayHello}>Say Hello</Button></div>
     <div></div>
     <Button on:click={() => fork('Agoric', 'ag-solo', 'start')}>Agoric VM</Button>
-    <!-- <Button on:click={() => fork('Agoric Server', 'ag-solo', 'to-solo')}>Solo</Button> -->
-    <!-- <Button on:click={() => fork('Agoric', 'agoric-cli', 'start')}>Agoric
-VM</Button> -->
-    <!-- -->
-    <!-- <Button on:click={() => fork('Catenate', 'cat')}>Cat</Button> -->
+    <Button on:click={() => fork('Agoric Server', 'ag-solo', 'to-solo')}>Solo</Button>
+    <Button on:click={() => fork('Agoric', 'agoric-cli', 'to-cli')}>CLI</Button>
+    <Button on:click={() => fork('Catenate', 'cat')}>Cat</Button>
+    <Button on:click={() => launchWallet(8000)}>Wallet</Button>
     {/if}
   </main>
 
@@ -241,7 +234,7 @@ VM</Button> -->
     <CommandTerminal actions={runningProcess.actions} bind:value={runningProcess.value} />
     <div slot="actions">
       <CancelButton on:click={() => runningProcess = null} />
-      <Button on:click={() => { terminate(runningProcess.title); runningProcess = null }}>Terminate</Button>
+      <Button on:click={() => { E(runningProcess.actions).kill(); runningProcess = null }}>Terminate</Button>
     </div>
   </Dialog>
 
