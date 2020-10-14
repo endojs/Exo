@@ -16,8 +16,14 @@
     },
   }, E(actions).getNotifier());
 
-  const tt = s =>
-    s.replace(/(.{80})/g, '$1\n');
+  const breakLines = lines =>
+    lines.trimRight().split('\n')
+    .map(
+      l =>
+        l
+          .replace(/\x1b\[\d+m/g, '') // FIXME: ANSI colors.
+          .replace(/\t/g, '  ')
+    );
 
   const handleKeyup = ev => {
     if (ev.key === 'Enter') {
@@ -41,19 +47,30 @@
   input {
     width: 100%;
   }
+
+  .history {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 60vh;
+    width: 80vw;
+  }
 </style>
 
 <section>
+  <div class="history">
+  <code>
   {#each consoleData as { type, data }}
     <div class="{type}">
-      <code>
     {#if type === 'exit'}
       Exited {data.code}
     {:else}
-      {tt(data)}
+      {#each breakLines(data) as line}
+        {line}<br/>
+      {/each}
     {/if}
-      </code>
     </div>
   {/each}
+  </code>
+  </div>
   <input use:init bind:value on:keyup={handleKeyup} />
 </section>

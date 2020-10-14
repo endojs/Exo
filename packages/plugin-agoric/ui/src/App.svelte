@@ -227,9 +227,12 @@
     <div>Greet <input id="nickname" bind:value="{nickname}" placeholder="friend" on:keyup={handleHelloKeyup} />
       <Button on:click={sayHello}>Say Hello</Button></div>
     <div></div>
-    <Button on:click={() => fork('Agoric Server', 'ag-solo', 'to-solo')}>Solo</Button>
-    <Button on:click={() => fork('Agoric Client', 'agoric-cli', 'to-cli')}>CLI</Button>
-    <Button on:click={() => fork('Catenate', 'cat')}>Cat</Button>
+    <Button on:click={() => fork('Agoric', 'ag-solo', 'start')}>Agoric VM</Button>
+    <!-- <Button on:click={() => fork('Agoric Server', 'ag-solo', 'to-solo')}>Solo</Button> -->
+    <!-- <Button on:click={() => fork('Agoric', 'agoric-cli', 'start')}>Agoric
+VM</Button> -->
+    <!-- -->
+    <!-- <Button on:click={() => fork('Catenate', 'cat')}>Cat</Button> -->
     {/if}
   </main>
 

@@ -5,6 +5,9 @@ const path = require('path');
 // Add our bin directory to the path, so we can find our ag-cosmos-helper
 process.env.PATH = `${path.join(__dirname, '..', 'bin')}${path.delimiter}${process.env.PATH}`;
 
+const homeAgoric = '/Users/michael/.agoric/basedir';  // FIGME
+process.chdir(homeAgoric);
+
 // If you see:
 // /Users/michael/agoric/agoric-sdk/node_modules/depd/index.js:1
 // TypeError: callSite.getFileName is not a function
