@@ -3,10 +3,12 @@ const { spawnSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-for (const [src, dst] of [
+function linkAllElectrons() {
+for (const [_src, dst] of [
 	['../../../../node_modules/electron', 'node_modules/electron'],
 	['../../../node_modules/electron', '../../app-electron/node_modules/electron']
 ]) {
+	const src = `${__dirname}/../../../../node_modules/electron`;
 	console.log('linking', src, 'to', dst);
 	try {
 		fs.unlinkSync(dst);
@@ -15,8 +17,11 @@ for (const [src, dst] of [
 			throw e;
 		}
 	}
+	fs.mkdirSync(path.dirname(dst), { recursive: true });
 	fs.symlinkSync(src, dst, 'junction');
 }
+}
+linkAllElectrons();
 
 console.log('rename morgan/node_modules/depd out of the way');
 try {
@@ -51,3 +56,6 @@ const ret = spawnSync('go', ['build', '-v', '-ldflags',`\
 if (ret.error) {
   throw ret.error;
 }
+
+
+
