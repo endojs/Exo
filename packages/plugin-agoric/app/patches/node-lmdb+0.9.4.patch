@@ -11,7 +11,7 @@ index 325a9aa..fe775fc 100644
        "sources": [
          "dependencies/lmdb/libraries/liblmdb/mdb.c",
          "dependencies/lmdb/libraries/liblmdb/midl.c",
-@@ -58,7 +58,22 @@
+@@ -58,7 +58,21 @@
            }
          }],
          ["OS=='win'", {
@@ -26,7 +26,6 @@ index 325a9aa..fe775fc 100644
 +                    ]
 +                  },
 +                  "VCCLCompilerTool": {
-+                    "Optimization": 0,
 +                    "WholeProgramOptimization": "false"
 +                  }
 +                }
