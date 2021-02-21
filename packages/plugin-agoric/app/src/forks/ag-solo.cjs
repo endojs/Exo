@@ -1,11 +1,15 @@
 // ag-solo entrypoint
 const esmRequire = require('esm')(module);
+const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
 // Add our bin directory to the path, so we can find our ag-cosmos-helper
 process.env.PATH = `${path.join(__dirname, '..', 'bin')}${path.delimiter}${process.env.PATH}`;
 
-const homeAgoric = '/Users/michael/.agoric/basedir';  // FIGME
+const homeDir = os.homedir();
+const homeAgoric = `${homeDir}/.agoric/basedir`;
+fs.mkdirSync(homeAgoric, { recursive: true });
 process.chdir(homeAgoric);
 
 // If you see:

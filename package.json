@@ -9,6 +9,7 @@
   "private": true,
   "workspaces": [
     "packages/*",
+    "packages/app-electron",
     "packages/plugin-agoric/app",
     "packages/plugin-agoric/ui"
   ]

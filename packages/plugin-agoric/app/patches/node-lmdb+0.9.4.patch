@@ -1,0 +1,37 @@
+diff --git a/node_modules/node-lmdb/binding.gyp b/node_modules/node-lmdb/binding.gyp
+index 325a9aa..fe775fc 100644
+--- a/node_modules/node-lmdb/binding.gyp
++++ b/node_modules/node-lmdb/binding.gyp
+@@ -7,7 +7,7 @@
+   "targets": [
+     {
+       "target_name": "node-lmdb",
+-      "win_delay_load_hook": "false",
++      "win_delay_load_hook": "true",
+       "sources": [
+         "dependencies/lmdb/libraries/liblmdb/mdb.c",
+         "dependencies/lmdb/libraries/liblmdb/midl.c",
+@@ -58,7 +58,22 @@
+           }
+         }],
+         ["OS=='win'", {
+-            "libraries": ["ntdll.lib"]
++            "libraries": ["ntdll.lib"],
++            "configurations": {
++              "Release": {
++                "msvs_settings": {
++                  "VCLinkerTool": {
++                    "AdditionalOptions": [
++                      "/LTCG:OFF"
++                    ]
++                  },
++                  "VCCLCompilerTool": {
++                    "Optimization": 0,
++                    "WholeProgramOptimization": "false"
++                  }
++                }
++              }
++            }
+         }],
+         ["use_fixed_size=='true'", {
+           "defines": ["MDB_FIXEDSIZE"],
