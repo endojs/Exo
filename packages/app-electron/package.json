@@ -2,7 +2,7 @@
   "name": "@pledger/app-electron",
   "productName": "Pledger",
   "private": true,
-  "version": "0.1.2-dev.0",
+  "version": "0.1.3",
   "description": "Pledger Electron frontend",
   "main": "./src/entrypoint.cjs",
   "repository": "git+ssh://github.com/Agoric/Pledger",
@@ -54,7 +54,11 @@
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
-          "config": {}
+          "config": {
+	    "name": "Pledger",
+	    "exe": "Pledger.exe",
+	    "signWithParams": "-n \"Michael FIG\""
+	  }
         },
         {
           "name": "@electron-forge/maker-dmg",
