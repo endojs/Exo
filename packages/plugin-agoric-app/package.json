@@ -10,7 +10,9 @@
     ]
   },
   "scripts": {
-    "build": "patch-package&&node scripts/build-sdk.cjs&&electron-rebuild",
+    "build": "yarn build:common",
+    "build:common": "patch-package&&node scripts/build-sdk.cjs",
+    "build:electron": "yarn build:common&&electron-rebuild",
     "lint": "echo \"No linting configured\""
   },
   "keywords": [],
