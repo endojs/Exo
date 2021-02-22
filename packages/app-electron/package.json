@@ -15,6 +15,7 @@
     "start": "concurrently \"npm:ui-dev\" \"electron-forge start\"",
     "build": "exit 0",
     "no-postinstall": "node scripts/link-electron.cjs",
+    "postinstall": "cd node_modules/@pledger/plugin-agoric-app&&yarn build",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish:electron": "electron-forge publish",

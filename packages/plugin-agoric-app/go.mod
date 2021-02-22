@@ -3,8 +3,7 @@ module main
 go 1.15
 
 require (
-	github.com/Agoric/agoric-sdk v0.24.0
-	github.com/cosmos/cosmos-sdk v0.40.1 // indirect
+	github.com/Agoric/agoric-sdk v0.24.1
 	github.com/ethereum/go-ethereum v1.9.22 // indirect
 )
 
@@ -18,4 +17,4 @@ replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.2-alp
 
 // At least until https://github.com/cosmos/cosmos-sdk/issues/8478 is solved and
 // released.
-replace github.com/cosmos/cosmos-sdk => github.com/agoric-labs/cosmos-sdk v0.34.4-0.20210129184725-f1afab29a888
+// replace github.com/cosmos/cosmos-sdk => github.com/agoric-labs/cosmos-sdk v0.34.4-0.20210129184725-f1afab29a888
