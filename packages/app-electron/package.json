@@ -6,14 +6,20 @@
   "description": "Pledger Electron frontend",
   "main": "./src/entrypoint.cjs",
   "repository": "git+ssh://github.com/Agoric/Pledger",
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  },
   "scripts": {
     "start": "concurrently \"npm:ui-dev\" \"electron-forge start\"",
-    "postinstall": "node scripts/link-electron.cjs",
+    "build": "exit 0",
+    "no-postinstall": "node scripts/link-electron.cjs",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish:electron": "electron-forge publish",
     "lint": "echo \"No linting configured\"",
-    "ui-dev": "cd ../plugin-agoric/ui&&yarn dev"
+    "ui-dev": "cd ../plugin-agoric-ui&&yarn dev"
   },
   "keywords": [],
   "author": "Agoric",
@@ -21,7 +27,7 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "appCopyright": "Copyright 2020 Agoric Systems Operating Company, Inc.\n\nLicensed under the Apache License, Version 2.0.",
+        "appCopyright": "Copyright 2021 Agoric Systems Operating Company, Inc.\n\nLicensed under the Apache License, Version 2.0.",
         "executableName": "pledger",
         "icon": "assets/agoric",
         "appCategoryType": "public.app-category.misc",
@@ -81,7 +87,8 @@
   "dependencies": {
     "@agoric/captp": "^1.7.1",
     "@agoric/install-ses": "^0.5.1",
-    "@pledger/plugin-agoric": "^0.1.0",
+    "@pledger/plugin-agoric-app": "^0.1.0",
+    "@pledger/plugin-agoric-ui": "^0.1.0",
     "electron-reload": "^1.5.0",
     "electron-squirrel-startup": "^1.0.0",
     "esm": "^3.2.25",
@@ -94,7 +101,7 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.54",
     "@electron-forge/maker-snap": "^6.0.0-beta.54",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
-    "@electron-forge/publisher-github": "^6.0.0-beta.54",
+    "@electron-forge/publisher-github": "file:assets/electron-forge-publisher-github-v6.0.0-beta.53.tgz",
     "concurrently": "^5.3.0",
     "electron": "^11.3.0"
   }

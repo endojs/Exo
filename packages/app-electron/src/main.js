@@ -3,7 +3,7 @@ import { makeCapTP, E } from '@agoric/captp';
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 
-import { bootPlugin as bootAppPlugin } from '@pledger/plugin-agoric/app/src/server';
+import { bootPlugin as bootAppPlugin } from '@pledger/plugin-agoric-app/src/server';
 
 async function main(argv, isProduction) {
   // TODO: Use this to automatically download updates on Windows and MacOS.

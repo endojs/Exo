@@ -25,7 +25,7 @@ function linkAllElectrons() {
     fs.symlinkSync(src, dst, 'junction');
   }
 }
-linkAllElectrons();
+// linkAllElectrons();
 
 console.log('rename morgan/node_modules/depd out of the way');
 try {
@@ -59,7 +59,7 @@ function fetchGitHead(gitHead) {
 }
 
 const gitHead = process.argv[2] || pjson.gitHead;
-fetchGitHead(gitHead);
+// fetchGitHead(gitHead);
 const build_tags = 'ledger';
 const build_tags_comma_sep = build_tags.replace(/ +/, ',');
 

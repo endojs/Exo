@@ -63,7 +63,7 @@ export const bootPlugin = ({ getState, setState }) => {
       return child;
     },
     getUiIndex() {
-      return path.join(__dirname, '../../ui/public/index.html');
+      return path.join(__dirname, '../../plugin-agoric-ui/public/index.html');
     },
     dispose() {
       for (const child of idToChild.values()) {
