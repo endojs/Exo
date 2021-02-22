@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 const { spawnSync } = require('child_process');
+const os = require('os');
 const path = require('path');
 const fs = require('fs');
 
@@ -62,6 +63,8 @@ fetchGitHead(gitHead);
 const build_tags = 'ledger';
 const build_tags_comma_sep = build_tags.replace(/ +/, ',');
 
+const exeExt = os.type() === 'Windows_NT' ? '.exe' : '';
+
 console.log('Compiling bin/ag-cosmos-helper with Go...');
 const ret = spawnSync('go', ['build', '-v', '-ldflags', `\
  -X github.com/cosmos/cosmos-sdk/version.Name=${VersionName}\
@@ -71,7 +74,7 @@ const ret = spawnSync('go', ['build', '-v', '-ldflags', `\
  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=${build_tags_comma_sep}"\
 `,
   '-buildmode=exe', '-tags', build_tags,
-  '-o', `${__dirname}/../bin/ag-cosmos-helper`,
+  '-o', `${__dirname}/../bin/ag-cosmos-helper${exeExt}`,
   `${goMod}/golang/cosmos/cmd/helper`
   ],
   {

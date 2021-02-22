@@ -43,8 +43,7 @@
   };
 
   const launchWallet = async (port = 8000) => {
-    const accessToken = await E(appP).getAccessToken(port);
-    alert(`accessToken=${accessToken}`);
+    accessToken = await E(appP).getAccessToken(port);
   };
 </script>
 
@@ -221,11 +220,9 @@
     <div>Greet <input id="nickname" bind:value="{nickname}" placeholder="friend" on:keyup={handleHelloKeyup} />
       <Button on:click={sayHello}>Say Hello</Button></div>
     <div></div>
-    <Button on:click={() => fork('Agoric', 'ag-solo', 'start')}>Agoric VM</Button>
-    <Button on:click={() => fork('Agoric Server', 'ag-solo', 'to-solo')}>Solo</Button>
-    <Button on:click={() => fork('Agoric', 'agoric-cli', 'to-cli')}>CLI</Button>
+    <Button on:click={() => fork('Agoric', 'ag-solo', 'setup')}>Agoric VM</Button>
     <Button on:click={() => fork('Catenate', 'cat')}>Cat</Button>
-    <Button on:click={() => launchWallet(8000)}>Wallet</Button>
+    <Button on:click={() => fork('Wallet', 'agoric-cli', 'open', '--repl')}>Wallet</Button>
     {/if}
   </main>
 
@@ -234,7 +231,7 @@
     <CommandTerminal actions={runningProcess.actions} bind:value={runningProcess.value} />
     <div slot="actions">
       <CancelButton on:click={() => runningProcess = null} />
-      <Button on:click={() => { E(runningProcess.actions).kill(); runningProcess = null }}>Terminate</Button>
+      <Button on:click={() => { E(runningProcess.actions).kill().finally(() => runningProcess = null); }}>Terminate</Button>
     </div>
   </Dialog>
 
