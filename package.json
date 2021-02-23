@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Agoric's Pledger wallet",
   "main": "index.js",
-  "repository": "https+git://github.com/Agoric/Pledger",
+  "repository": "https+git://github.com/agoric-labs/Pledger",
   "author": "Agoric",
   "license": "Apache-2.0",
   "private": true,

@@ -2,7 +2,7 @@
   "name": "@pledger/plugin-agoric-app",
   "version": "0.1.0",
   "description": "Pledger plugin for Agoric's cryptoeconomy",
-  "repository": "git+ssh://github.com/Agoric/Pledger",
+  "repository": "https+git://github.com/agoric-labs/Pledger",
   "private": true,
   "workspaces": {
     "nohoist": [

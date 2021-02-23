@@ -6,9 +6,9 @@ import path from 'path';
 import { bootPlugin as bootAppPlugin } from '@pledger/plugin-agoric-app/src/server';
 
 async function main(argv, isProduction) {
-  // TODO: Use this to automatically download updates on Windows and MacOS.
-  // Requires code signing.
-  require('update-electron-app')();
+  // Use this to automatically download updates on Windows and MacOS.
+  // Requires code signing, and publishing to a public repo on github.
+  require('update-electron-app')({ repo: 'agoric-labs/Pledger' });
 
   require('electron-reload')(path.join(__dirname, '../../..'), {
     electron: path.join(__dirname, '../node_modules', '.bin', 'electron'),
