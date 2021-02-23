@@ -59,7 +59,7 @@
           "config": {
             "name": "Pledger",
             "exe": "Pledger.exe",
-            "signWithParams": "-n \"Michael FIG\""
+            "signWithParams": "-n \"Michael FIG\" -tr http://timestamp.sectigo.com -fd sha256 -td sha256"
           }
         },
         {
@@ -67,14 +67,6 @@
           "config": {
             "sign": false
           }
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
         }
       ],
       "publishers": [
