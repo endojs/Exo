@@ -5827,9 +5827,9 @@ plist@^3.0.0, plist@^3.0.1:
     xmlbuilder "^9.0.7"
     xmldom "0.1.x"
 
-"polycrc@git+https://github.com/agoric-labs/node-polycrc.git":
+"polycrc@https://github.com/agoric-labs/node-polycrc":
   version "1.0.1-agoric"
-  resolved "git+https://github.com/agoric-labs/node-polycrc.git#f396a902c5ba663cb91b6c8c13ec0afe792108d0"
+  resolved "https://github.com/agoric-labs/node-polycrc#f396a902c5ba663cb91b6c8c13ec0afe792108d0"
 
 posix-character-classes@^0.1.0:
   version "0.1.1"
