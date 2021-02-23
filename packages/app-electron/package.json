@@ -2,7 +2,7 @@
   "name": "@pledger/app-electron",
   "productName": "Pledger",
   "private": true,
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Pledger Electron frontend",
   "main": "./src/entrypoint.cjs",
   "repository": "https+git://github.com/agoric-labs/Pledger",
@@ -55,6 +55,9 @@
       },
       "makers": [
         {
+          "name": "@electron-forge/maker-zip"
+        },
+        {
           "name": "@electron-forge/maker-squirrel",
           "config": {
             "name": "Pledger",
@@ -99,6 +102,7 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.54",
     "@electron-forge/maker-snap": "^6.0.0-beta.54",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+    "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "@electron-forge/publisher-github": "file:assets/electron-forge-publisher-github-v6.0.0-beta.53.tgz",
     "concurrently": "^5.3.0",
     "electron": "^11.3.0"
