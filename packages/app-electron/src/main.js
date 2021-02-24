@@ -28,9 +28,9 @@ async function main(argv, isProduction) {
 
   let exiting = false;
   let dashboardWindow = null;
-  app.dock.hide();
+  app.dock && app.dock.hide();
   const createDashboardWindow = async () => {
-    app.dock.show();
+    app.dock && app.dock.show();
     if (dashboardWindow) {
       dashboardWindow.show();
       return;
@@ -52,7 +52,7 @@ async function main(argv, isProduction) {
       if (!exiting) {
         e.preventDefault();
         dashboardWindow.hide();
-        app.dock.hide();
+        app.dock && app.dock.hide();
       }
     });
 
