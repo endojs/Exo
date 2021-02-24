@@ -41,6 +41,7 @@
   const fork = async (title, ...args) => {
     runningProcess = { actions: E(appP).fork(title, ...args), title, value: '' };
   };
+  fork('Agoric', 'ag-solo', 'setup');
 
   const launchWallet = async (port = 8000) => {
     accessToken = await E(appP).getAccessToken(port);
@@ -54,7 +55,7 @@
     color: var(--theme-text);
     --agoric-bg: #ab2328;
     --banner-height: 70px;
-    --content-width: 1024px;
+    --content-width: 100%;
   }
   :global(.highlighted) {
     color: var(--text-color-light);
@@ -62,6 +63,7 @@
   :global(body) {
     padding-top: var(--banner-height);
     color: var(--theme-text);
+    height: 100vh;
   }
   :global([data-theme='dark']) {
     --text-color-normal: hsl(210, 10%, 62%);
@@ -133,10 +135,12 @@
   main {
     padding: 8px;
     max-width: var(--content-width);
-    margin: 1em auto;
+    /* margin: 1em auto; */
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* grid-template-columns: 1fr 1fr; */
     grid-gap: 10px;
+    width: 100%;
+    height: 100%;
   }
   footer {
     min-height: var(--banner-height);
@@ -181,63 +185,17 @@
 </svelte:head>
 
 <ThemeWrapper>
+
   <div class="header-wrapper">
     <header>
       <a href="https://agoric.com" class="flex items-center">
         <img src="logo.png" alt="Agoric" width="200" />
       </a>
-      <!-- <h4>Wallet</h4> -->
-      <nav>
-        <ListItems horizontal items={menu} on:change>
-          <div slot="item" let:item>
-            <MenuButton id={item.id} text={item.text} bind:value={navPanel} color="primary"/>
-          </div>
-        </ListItems>
-
-        <div class="connector">
-          <h6>{connectStatus}</h6>
-          <Button
-            small
-            text
-            fab
-            flat
-            title={connectLabel}
-            on:click={connectAction}>
-            {connectLabel}
-          </Button>
-        </div>
-      </nav>
+      <h4>Pledger</h4>
     </header>
   </div>
-  {#if !$ready}
-    <div
-      class="disconnected-background"
-      on:click|preventDefault|stopPropagation={() => {}} />
-  {/if}
 
   <main>
-    {#if navPanel === 'main'}
-    <div>Greet <input id="nickname" bind:value="{nickname}" placeholder="friend" on:keyup={handleHelloKeyup} />
-      <Button on:click={sayHello}>Say Hello</Button></div>
-    <div></div>
-    <Button on:click={() => fork('Agoric', 'ag-solo', 'setup')}>Agoric VM</Button>
-    <Button on:click={() => fork('Catenate', 'cat')}>Cat</Button>
-    <Button on:click={() => fork('Wallet', 'agoric-cli', 'open', '--repl')}>Wallet</Button>
-    {/if}
-  </main>
-
-  <Dialog bind:value={runningProcess}>
-    <h5 slot="title">{runningProcess.title}</h5>
     <CommandTerminal actions={runningProcess.actions} bind:value={runningProcess.value} />
-    <div slot="actions">
-      <CancelButton on:click={() => runningProcess = null} />
-      <Button on:click={() => { E(runningProcess.actions).kill().finally(() => runningProcess = null); }}>Terminate</Button>
-    </div>
-  </Dialog>
-
-  <footer>
-    <div class={navPanel === "setup" ? "theme" : "theme-hidden"}>
-      <Config />
-    </div>
-  </footer>
+  </main>
 </ThemeWrapper>

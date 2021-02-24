@@ -2,7 +2,7 @@
   "name": "@pledger/app-electron",
   "productName": "Pledger",
   "private": true,
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Pledger Electron frontend",
   "main": "./src/entrypoint.cjs",
   "repository": "https+git://github.com/agoric-labs/Pledger",

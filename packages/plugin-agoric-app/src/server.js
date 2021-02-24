@@ -1,3 +1,5 @@
+import { E } from '@agoric/eventual-send';
+
 import { fork } from 'child_process';
 import path from 'path';
 import { makeNotifierKit } from '@agoric/notifier';

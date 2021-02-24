@@ -2,6 +2,7 @@
   import 'smelte/src/tailwind.css';
   import { E } from '@agoric/eventual-send';
   import { updateFromNotifier } from '@agoric/notifier';
+  import { beforeUpdate, afterUpdate } from 'svelte';
 
   export let actions;
   export let value = '';
@@ -16,14 +17,8 @@
     },
   }, E(actions).getNotifier());
 
-  const breakLines = lines =>
-    lines.trimRight().split('\n')
-    .map(
-      l =>
-        l
-          .replace(/\x1b\[\d+m/g, '') // FIXME: ANSI colors.
-          .replace(/\t/g, '  ')
-    );
+  const removeAnsi = lines =>
+    lines.trimRight().replace(/\x1b\[\d+m/g, ''); // FIXME: Need a better regex.
 
   const handleKeyup = ev => {
     if (ev.key === 'Enter') {
@@ -35,6 +30,18 @@
   function init(el) {
     el.focus();
   }
+
+
+  let div;
+  let autoscroll;
+
+  beforeUpdate(() => {
+  	autoscroll = div && (div.offsetHeight + div.scrollTop) > (div.scrollHeight - 20);
+  });
+
+  afterUpdate(() => {
+  	if (autoscroll) div.scrollTo(0, div.scrollHeight);
+  });
 </script>
 
 <style>
@@ -48,29 +55,51 @@
     width: 100%;
   }
 
+  section {
+    width: 100%;
+  }
+
+  code {
+    width: 100%;
+  }
+
   .history {
     overflow-y: auto;
     overflow-x: hidden;
-    height: 60vh;
-    width: 80vw;
+    width: 100%;
+    /* height: 60vh;
+    width: 80vw; */
   }
+
+  section {
+    display: flex;
+    min-height: 100px;
+  }
+
+  .preserve-whitespace {
+    white-space: pre-wrap;
+  }
+
+  .scrollable {
+		flex: 1 1 auto;
+		border-top: 1px solid #eee;
+		margin: 0 0 0.5em 0;
+		overflow-y: auto;
+	}
 </style>
 
 <section>
-  <div class="history">
+  <div class="history scrollable" bind:this={div}>
   <code>
   {#each consoleData as { type, data }}
-    <div class="{type}">
+    <div class="preserve-whitespace {type}">
     {#if type === 'exit'}
       Exited {data.code}
     {:else}
-      {#each breakLines(data) as line}
-        {line}<br/>
-      {/each}
+      {removeAnsi(data)}
     {/if}
     </div>
   {/each}
   </code>
   </div>
-  <input use:init bind:value on:keyup={handleKeyup} />
 </section>
