@@ -718,6 +718,18 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
+"@davidwinter/electron-forge-maker-snap@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@davidwinter/electron-forge-maker-snap/-/electron-forge-maker-snap-0.7.1.tgz#705c9ba831e267510db3ddd057548b42b15577a6"
+  integrity sha512-uvzeeGDqcHQBD26Blfqe/h8iOb6GavcnH2ERqfUZOsyMv28OAGqi6+m4sID6h8YB2by8MADqTw/F5nkAtGZjyQ==
+  dependencies:
+    "@electron-forge/maker-base" "^6.0.0-beta.54"
+    debug "^4.3.1"
+    electron-packager "^15.2.0"
+    fs-extra "^9.0.1"
+    ini "^2.0.0"
+    js-yaml "^3.14.1"
+
 "@electron-forge/async-ora@6.0.0-beta.53":
   version "6.0.0-beta.53"
   resolved "https://registry.yarnpkg.com/@electron-forge/async-ora/-/async-ora-6.0.0-beta.53.tgz#5f0d183adab5a564c5bdd4b919174d6054b041cf"
@@ -862,7 +874,7 @@
     "@malept/cross-spawn-promise" "^1.1.0"
     fs-extra "^9.0.1"
 
-"@electron-forge/maker-base@6.0.0-beta.54":
+"@electron-forge/maker-base@6.0.0-beta.54", "@electron-forge/maker-base@^6.0.0-beta.54":
   version "6.0.0-beta.54"
   resolved "https://registry.yarnpkg.com/@electron-forge/maker-base/-/maker-base-6.0.0-beta.54.tgz#f5679d6c472d9c3ada4eb0b210ea28067f95f568"
   integrity sha512-4y0y15ieb1EOR5mibtFM9tZzaShbAO0RZu6ARLCpD5BgKuJBzXRPfWvEmY6WeDNzoWTJ+mQdYikLAeOL2E9mew==
@@ -967,6 +979,17 @@
     fs-extra "^9.0.1"
     lodash "^4.17.20"
     mime-types "^2.1.25"
+
+"@electron-forge/publisher-snapcraft@6.0.0-beta.54":
+  version "6.0.0-beta.54"
+  resolved "https://registry.yarnpkg.com/@electron-forge/publisher-snapcraft/-/publisher-snapcraft-6.0.0-beta.54.tgz#12475bfabc987fb78dabe08fbc3642fc4725de11"
+  integrity sha512-D18rC+HcZTRrB/+0Iw6s0hw5AyyN38ELeAI94Jb7ukAPp5zXINzHIwsAEDdaymvNla35IrSypuN0hDZsGtFaiA==
+  dependencies:
+    "@electron-forge/async-ora" "6.0.0-beta.54"
+    "@electron-forge/publisher-base" "6.0.0-beta.54"
+    fs-extra "^9.0.1"
+  optionalDependencies:
+    electron-installer-snap "^5.1.0"
 
 "@electron-forge/shared-types@6.0.0-beta.53":
   version "6.0.0-beta.53"
@@ -2635,6 +2658,13 @@ debug@^4.0.1, debug@^4.1.0, debug@^4.1.1:
   dependencies:
     ms "2.1.2"
 
+debug@^4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.1.tgz#f0d229c505e0c6d8c49ac553d1b13dc183f6b2ee"
+  integrity sha512-doEwdvm4PCeK4K3RQN2ZC2BYUBaxwLARCqZmMjtF8a51J2Rb0xpVloFRnCODwqjpwnAoao4pelN8l3RJdv3gRQ==
+  dependencies:
+    ms "2.1.2"
+
 decamelize@^1.1.2, decamelize@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
@@ -2942,6 +2972,18 @@ electron-osx-sign@^0.4.11:
     minimist "^1.2.0"
     plist "^3.0.1"
 
+electron-osx-sign@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/electron-osx-sign/-/electron-osx-sign-0.5.0.tgz#fc258c5e896859904bbe3d01da06902c04b51c3a"
+  integrity sha512-icoRLHzFz/qxzDh/N4Pi2z4yVHurlsCAYQvsCSG7fCedJ4UJXBS6PoQyGH71IfcqKupcKeK7HX/NkyfG+v6vlQ==
+  dependencies:
+    bluebird "^3.5.0"
+    compare-version "^0.1.2"
+    debug "^2.6.8"
+    isbinaryfile "^3.0.2"
+    minimist "^1.2.0"
+    plist "^3.0.1"
+
 electron-packager@^15.0.0:
   version "15.1.0"
   resolved "https://registry.yarnpkg.com/electron-packager/-/electron-packager-15.1.0.tgz#16a3733e4cad26112a2ac36f0b0f35c3b0170eff"
@@ -2964,6 +3006,29 @@ electron-packager@^15.0.0:
     resolve "^1.1.6"
     semver "^7.1.3"
     yargs-parser "^19.0.1"
+
+electron-packager@^15.2.0:
+  version "15.2.0"
+  resolved "https://registry.yarnpkg.com/electron-packager/-/electron-packager-15.2.0.tgz#c93de19d75e7c03d159a56295384d371cb625ad4"
+  integrity sha512-BaklTBRQy1JTijR3hi8XxHf/uo76rHbDCNM/eQHSblzE9C0NoNfOe86nPxB7y1u2jwlqoEJ4zFiHpTFioKGGRA==
+  dependencies:
+    "@electron/get" "^1.6.0"
+    asar "^3.0.0"
+    debug "^4.0.1"
+    electron-notarize "^1.0.0"
+    electron-osx-sign "^0.5.0"
+    extract-zip "^2.0.0"
+    filenamify "^4.1.0"
+    fs-extra "^9.0.0"
+    galactus "^0.2.1"
+    get-package-info "^1.0.0"
+    junk "^3.1.0"
+    parse-author "^2.0.0"
+    plist "^3.0.0"
+    rcedit "^2.0.0"
+    resolve "^1.1.6"
+    semver "^7.1.3"
+    yargs-parser "^20.0.0"
 
 electron-rebuild@^2.0.0, electron-rebuild@^2.0.3:
   version "2.3.5"
@@ -4122,6 +4187,11 @@ ini@^1.3.4, ini@~1.3.0:
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
   integrity sha512-RZY5huIKCMRWDUqZlEi72f/lmXKMvuszcMBduliQ3nnWbx9X/ZBQO7DijMEYS9EhHBb2qacRUMtC7svLwe0lcw==
 
+ini@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ini/-/ini-2.0.0.tgz#e5fd556ecdd5726be978fa1001862eacb0a94bc5"
+  integrity sha512-7PnF4oN3CvZF23ADhA5wRaYEQpJ8qygSkbtTXWBeXWXmEVRXK+1ITciHWwHhsjv1TmW0MgacIv6hEi5pX5NQdA==
+
 inquirer@^6.3.1:
   version "6.5.2"
   resolved "https://registry.yarnpkg.com/inquirer/-/inquirer-6.5.2.tgz#ad50942375d036d327ff528c08bd5fab089928ca"
@@ -4522,6 +4592,14 @@ js-yaml@^3.10.0, js-yaml@^3.13.1:
   version "3.14.0"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.14.0.tgz#a7a34170f26a21bb162424d8adacb4113a69e482"
   integrity sha512-/4IbIeHcD9VMHFqDR/gQ7EdZdLimOvW2DdcxFjdyyZ9NsbS+ccrXqVWDtab/lRl5AlUqmpBx8EhPaWR+OtY17A==
+  dependencies:
+    argparse "^1.0.7"
+    esprima "^4.0.0"
+
+js-yaml@^3.14.1:
+  version "3.14.1"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.14.1.tgz#dae812fdb3825fa306609a8717383c50c36a0537"
+  integrity sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"

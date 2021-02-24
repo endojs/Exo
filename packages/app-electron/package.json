@@ -58,6 +58,15 @@
           "name": "@electron-forge/maker-zip"
         },
         {
+          "name": "@davidwinter/electron-forge-maker-snap",
+          "oldname": "@electron-forge/maker-snap",
+          "config": {
+            "name": "pledger",
+            "confinement": "devmode",
+            "executableName": "pledger"
+          }
+        },
+        {
           "name": "@electron-forge/maker-squirrel",
           "config": {
             "name": "Pledger",
@@ -73,6 +82,10 @@
         }
       ],
       "publishers": [
+        {
+          "name": "@electron-forge/publisher-snapcraft",
+          "config": {}
+        },
         {
           "name": "@electron-forge/publisher-github",
           "config": {
@@ -96,6 +109,7 @@
     "update-electron-app": "^1.5.0"
   },
   "devDependencies": {
+    "@davidwinter/electron-forge-maker-snap": "^0.7.1",
     "@electron-forge/cli": "^6.0.0-beta.54",
     "@electron-forge/maker-deb": "^6.0.0-beta.54",
     "@electron-forge/maker-dmg": "^6.0.0-beta.54",
@@ -104,6 +118,7 @@
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "@electron-forge/publisher-github": "file:assets/electron-forge-publisher-github-v6.0.0-beta.53.tgz",
+    "@electron-forge/publisher-snapcraft": "6.0.0-beta.54",
     "concurrently": "^5.3.0",
     "electron": "^11.3.0"
   }
