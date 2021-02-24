@@ -1,9 +1,12 @@
 import '@agoric/install-ses';
 import { makeCapTP, E } from '@agoric/captp';
-import { app, BrowserWindow, Menu, MenuItem, Tray } from 'electron';
+import { app, BrowserWindow, Menu, shell, Tray } from 'electron';
 import path from 'path';
 
+// This is needed to map the Pledger systray to the signing certificate.
 const TRAY_GUID = 'C728AAD2-DA20-421C-B534-97023DACF258';
+
+const WALLET_PORT = 8000;
 
 import { bootPlugin as bootAppPlugin } from '@pledger/plugin-agoric-app/src/server';
 
@@ -26,9 +29,13 @@ async function main(argv, isProduction) {
   // Start the ag-solo running.
   E(appPlugin).fork('Agoric', 'ag-solo', 'setup');
 
-  let exiting = false;
+  let quitting = false;
+  app.on('before-quit', () => {
+    // If they hit C-q, treat it as a full exit.
+    quitting = true;
+  });
+
   let dashboardWindow = null;
-  app.dock && app.dock.hide();
   const createDashboardWindow = async () => {
     app.dock && app.dock.show();
     if (dashboardWindow) {
@@ -46,10 +53,9 @@ async function main(argv, isProduction) {
       },
     });
 
-    // Dispose of the plugin when we're closed.
-    // dashboardWindow.on('closed', () => E(appPlugin).dispose());
+    // Just hide.
     dashboardWindow.on('close', e => {
-      if (!exiting) {
+      if (!quitting) {
         e.preventDefault();
         dashboardWindow.hide();
         app.dock && app.dock.hide();
@@ -82,23 +88,38 @@ async function main(argv, isProduction) {
     const icon = process.platform === 'win32' ? 'agoric.ico' : 'agoric-systray.png';
     appIcon = new Tray(`${__dirname}/../assets/${icon}`, TRAY_GUID);
     const contextMenu = Menu.buildFromTemplate([
-      { label: 'Open Agoric Wallet', click() {
-        E(appPlugin).fork('Wallet', 'agoric-cli', 'open');
+      { label: 'Open Agoric Wallet', async click() {
+        const ac = await E(appPlugin).getAccessToken(WALLET_PORT);
+        shell.openExternal(`http://localhost:${WALLET_PORT}/wallet#accessToken=${ac}`);
       } },
-      { label: 'Agoric Console (REPL)', click() {
-        E(appPlugin).fork('Wallet', 'agoric-cli', 'open', '--repl=only');
+      { label: 'Agoric Console (REPL)', async click() {
+        const ac = await E(appPlugin).getAccessToken(WALLET_PORT);
+        shell.openExternal(`http://localhost:${WALLET_PORT}/?w=0#accessToken=${ac}`);
       } },
       { type: 'separator' },
-      { label: 'Pledger Logs...', click: createDashboardWindow },
+      { label: 'Pledger Dashboard...', click: createDashboardWindow },
       { type: 'separator' },
       { label: 'Quit Pledger', click() {
-        exiting = true;
         E(appPlugin).dispose().finally(() => app.quit());
       } },
     ]);
 
     appIcon.setToolTip('Pledger Wallet');
     appIcon.setContextMenu(contextMenu);
+    appIcon.on('click', () => appIcon.popUpContextMenu());
+
+    if (0) {
+      // Pop up the dashboard immediately.
+      createDashboardWindow();
+    } else {
+      // Hide the dock icon.
+      app.dock && app.dock.hide();
+      if (0) {
+        // Pop up the context menu for engagement.
+        const { x, y } = appIcon.getBounds();
+        appIcon.popUpContextMenu(contextMenu, { x, y });
+      }
+    }
   };
 
   // This method will be called when Electron has finished
