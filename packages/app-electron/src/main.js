@@ -2,23 +2,28 @@ import '@agoric/install-ses';
 import { makeCapTP, E } from '@agoric/captp';
 import { app, BrowserWindow, Menu, shell, Tray } from 'electron';
 import path from 'path';
-
-// This is needed to map the Pledger systray to the signing certificate.
-const TRAY_GUID = 'C728AAD2-DA20-421C-B534-97023DACF258';
+import fs from 'fs';
+import os from 'os';
 
 const WALLET_PORT = 8000;
 
 import { bootPlugin as bootAppPlugin } from '@pledger/plugin-agoric-app/src/server';
 
-async function main(argv, isProduction) {
+async function main(args, isProduction) {
   // Use this to automatically download updates on Windows and MacOS.
   // Requires code signing, and publishing to a public repo on github.
   require('update-electron-app')({ repo: 'agoric-labs/Pledger' });
 
-  require('electron-reload')(path.join(__dirname, '../../..'), {
-    electron: path.join(__dirname, '../node_modules', '.bin', 'electron'),
-    awaitWriteFinish: true,
-  });
+  if (!isProduction) {
+    require('electron-reload')(path.join(__dirname, '../../..'), {
+      electron: path.join(__dirname, '../node_modules', '.bin', 'electron'),
+      awaitWriteFinish: true,
+    });
+  }
+
+  // This is needed to map the Pledger systray to the signing certificate.  For
+  // non-production runs we use a different value.
+  const TRAY_GUID = isProduction ? 'DE8D38CB-4B15-4153-B549-745067ADC852' : 'C728AAD2-DA20-421C-B534-97023DACF258';
 
   // Needed to display on Ubuntu 2020.04 under Parallels
   app.disableHardwareAcceleration();
@@ -32,6 +37,11 @@ async function main(argv, isProduction) {
   let quitting = false;
   app.on('before-quit', () => {
     // If they hit C-q, treat it as a full exit.
+    quitting = true;
+  });
+
+  // If auto updating was accepted, allow quitting.
+  app.on('before-quit-for-update', () => {
     quitting = true;
   });
 
@@ -83,10 +93,10 @@ async function main(argv, isProduction) {
     await dashboardWindow.loadFile(uiIndex);
   };
 
-  let appIcon = null;
+  let appTray = null;
   const createTray = async () => {
     const icon = process.platform === 'win32' ? 'agoric.ico' : 'agoric-systray.png';
-    appIcon = new Tray(`${__dirname}/../assets/${icon}`, TRAY_GUID);
+    appTray = new Tray(`${__dirname}/../assets/${icon}`, TRAY_GUID);
     const contextMenu = Menu.buildFromTemplate([
       { label: 'Open Agoric Wallet', async click() {
         const ac = await E(appPlugin).getAccessToken(WALLET_PORT);
@@ -104,20 +114,25 @@ async function main(argv, isProduction) {
       } },
     ]);
 
-    appIcon.setToolTip('Pledger Wallet');
-    appIcon.setContextMenu(contextMenu);
-    appIcon.on('click', () => appIcon.popUpContextMenu());
+    appTray.setToolTip('Pledger Wallet');
+    appTray.setContextMenu(contextMenu);
+    appTray.on('click', () => appTray.popUpContextMenu());
 
-    if (0) {
+    if (args[0] === 'dash') {
       // Pop up the dashboard immediately.
       createDashboardWindow();
     } else {
       // Hide the dock icon.
       app.dock && app.dock.hide();
-      if (0) {
+      const ALREADY_POPPED_STAMP = path.join(os.homedir(), '.agoric', 'already-popped.stamp');
+      if (!fs.existsSync(ALREADY_POPPED_STAMP)) {
         // Pop up the context menu for engagement.
-        const { x, y } = appIcon.getBounds();
-        appIcon.popUpContextMenu(contextMenu, { x, y });
+        const { x, y } = appTray.getBounds();
+        appTray.popUpContextMenu(contextMenu, { x, y });
+
+        // Write out the stamp.
+        fs.mkdirSync(path.dirname(ALREADY_POPPED_STAMP), { recursive: true, mode: 0o700 });
+        fs.writeFileSync(ALREADY_POPPED_STAMP, app.getVersion());
       }
     }
   };

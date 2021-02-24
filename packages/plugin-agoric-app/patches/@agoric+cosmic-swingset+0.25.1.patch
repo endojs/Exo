@@ -1,3 +1,96 @@
+diff --git a/node_modules/@agoric/cosmic-swingset/lib/ag-solo/access-token.js b/node_modules/@agoric/cosmic-swingset/lib/ag-solo/access-token.js
+index a712d1b..39b3afc 100644
+--- a/node_modules/@agoric/cosmic-swingset/lib/ag-solo/access-token.js
++++ b/node_modules/@agoric/cosmic-swingset/lib/ag-solo/access-token.js
+@@ -1,5 +1,6 @@
+ import fs from 'fs';
+ import crypto from 'crypto';
++import os from 'os';
+ import path from 'path';
+ 
+ import { openSwingStore } from '@agoric/swing-store-simple';
+@@ -27,7 +28,7 @@ export function generateAccessToken({
+ 
+ export async function getAccessToken(port) {
+   // Ensure we're protected with a unique accessToken for this basedir.
+-  const sharedStateDir = path.join(process.env.HOME || '', '.agoric');
++  const sharedStateDir = path.join(os.homedir(), '.agoric');
+   await fs.promises.mkdir(sharedStateDir, { mode: 0o700, recursive: true });
+ 
+   // Ensure an access token exists.
+diff --git a/node_modules/@agoric/cosmic-swingset/lib/ag-solo/html/main.js b/node_modules/@agoric/cosmic-swingset/lib/ag-solo/html/main.js
+index fa4bdb6..3deef74 100644
+--- a/node_modules/@agoric/cosmic-swingset/lib/ag-solo/html/main.js
++++ b/node_modules/@agoric/cosmic-swingset/lib/ag-solo/html/main.js
+@@ -6,29 +6,48 @@ const RECONNECT_BACKOFF_SECONDS = 3;
+ const resetFns = [];
+ let inpBackground;
+ 
+-// Fetch the access token from the window's URL.
+-let accessTokenParams = `?${window.location.hash.slice(1)}`;
+-let hasAccessToken = new URLSearchParams(accessTokenParams).get('accessToken');
+-
+-try {
+-  if (hasAccessToken) {
+-    // Store the access token for later use.
+-    localStorage.setItem('accessTokenParams', accessTokenParams);
+-  } else {
+-    // Try reviving it from localStorage.
+-    accessTokenParams = localStorage.getItem('accessTokenParams') || '?';
+-    hasAccessToken = new URLSearchParams(accessTokenParams).get('accessToken');
++let accessTokenParams;
++let hasAccessToken;
++
++function getAccessToken() {
++  // Fetch the access token from the window's URL.
++  accessTokenParams = `?${window.location.hash.slice(1)}`;
++  hasAccessToken = new URLSearchParams(accessTokenParams).get('accessToken');
++
++  try {
++    if (hasAccessToken) {
++      // Store the access token for later use.
++      localStorage.setItem('accessTokenParams', accessTokenParams);
++    } else {
++      // Try reviving it from localStorage.
++      accessTokenParams = localStorage.getItem('accessTokenParams') || '?';
++      hasAccessToken = new URLSearchParams(accessTokenParams).get(
++        'accessToken',
++      );
++    }
++  } catch (e) {
++    console.log('Error fetching accessTokenParams', e);
+   }
+-} catch (e) {
+-  console.log('Error fetching accessTokenParams', e);
+-}
+ 
+-// Now that we've captured it, clear out the access token from the URL bar.
+-window.location.hash = '';
+-window.addEventListener('hashchange', _ev => {
+-  // Keep it clear.
++  // Now that we've captured it, clear out the access token from the URL bar.
+   window.location.hash = '';
+-});
++  window.addEventListener('hashchange', _ev => {
++    // See if we should update the access token params.
++    const atp = `?${window.location.hash.slice(1)}`;
++    const hat = new URLSearchParams(atp).get('accessToken');
++
++    if (hat) {
++      // We have new params, so replace them.
++      accessTokenParams = atp;
++      hasAccessToken = hat;
++      localStorage.setItem('accessTokenParams', accessTokenParams);
++    }
++
++    // Keep it clear.
++    window.location.hash = '';
++  });
++}
++getAccessToken();
+ 
+ if (!hasAccessToken) {
+   // This is friendly advice to the user who doesn't know.
 diff --git a/node_modules/@agoric/cosmic-swingset/lib/ag-solo/init-basedir.js b/node_modules/@agoric/cosmic-swingset/lib/ag-solo/init-basedir.js
 index 6a17445..530fdab 100644
 --- a/node_modules/@agoric/cosmic-swingset/lib/ag-solo/init-basedir.js
@@ -94,3 +187,25 @@ index 06b4052..5f9dd5e 100644
 -  cp.stderr.pipe(process.stderr);
 -  cp.stdout.pipe(process.stdout);
  }
+diff --git a/node_modules/@agoric/cosmic-swingset/lib/chain-main.js b/node_modules/@agoric/cosmic-swingset/lib/chain-main.js
+index 42befb4..e7cb807 100644
+--- a/node_modules/@agoric/cosmic-swingset/lib/chain-main.js
++++ b/node_modules/@agoric/cosmic-swingset/lib/chain-main.js
+@@ -5,6 +5,8 @@ import {
+ } from '@agoric/swingset-vat/src/devices/mailbox';
+ 
+ import { assert, details as X } from '@agoric/assert';
++import os from 'os';
++
+ import { launch } from './launch-chain';
+ import makeBlockManager from './block-manager';
+ import { getMeterProvider } from './kernel-stats';
+@@ -103,7 +105,7 @@ export default async function main(progname, args, { path, env, agcc }) {
+ 
+   // We try to find the actual cosmos state directory (default=~/.ag-chain-cosmos), which
+   // is better than scribbling into the current directory.
+-  const cosmosHome = getFlagValue('home', `${env.HOME}/.ag-chain-cosmos`);
++  const cosmosHome = getFlagValue('home', `${os.homedir()}/.ag-chain-cosmos`);
+   const stateDBDir = `${cosmosHome}/data/ag-cosmos-chain-state`;
+ 
+   // console.log('Have AG_COSMOS', agcc);

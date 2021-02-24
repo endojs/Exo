@@ -32,6 +32,7 @@ dependencies is possible in the `packages/app-electron/package.json`.
 To create the installers from the previous packaging, run:
 
 ```sh
+export SNAPCRAFT_BUILD_ENVIRONMENT=host # Needed under Linux VMs that can't nest VMs
 yarn make --skip-package
 ```
 

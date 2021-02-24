@@ -10,7 +10,7 @@ const args = PRODUCTION ? process.argv.slice(1) : process.argv.slice(2);
 const esmRequire = require('esm')(module);
 // require('node-lmdb');
 
-console.log('FIGME: Electron app', process.argv, `PRODUCTION=${PRODUCTION}`);
+// console.log('FIGME: Electron app', process.argv, `PRODUCTION=${PRODUCTION}`);
 const main = esmRequire('./main.js').default;
-main(process.argv, PRODUCTION);
+main(args, PRODUCTION);
 // Wait for clean app.exit().
