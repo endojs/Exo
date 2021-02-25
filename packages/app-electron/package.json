@@ -15,7 +15,7 @@
     "start": "concurrently \"npm:ui-dev\" \"electron-forge start\"",
     "build": "exit 0",
     "no-postinstall": "node scripts/link-electron.cjs",
-    "postinstall": "cd node_modules/@pledger/plugin-agoric-app&&yarn build:electron",
+    "postinstall": "patch-package&&cd node_modules/@pledger/plugin-agoric-app&&yarn build:electron",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish:electron": "electron-forge publish",
@@ -62,8 +62,8 @@
           "oldname": "@electron-forge/maker-snap",
           "config": {
             "name": "pledger",
-            "confinement": "devmode",
-            "executableName": "pledger"
+            "confinement": "strict",
+	    "executableName": "pledger"
           }
         },
         {
