@@ -59,3 +59,25 @@ https://github.com/agoric-labs/Pledger in order to create release artifacts.
 # Push the bundle to the publishers
 yarn publish:electron --from-dry-run
 ```
+
+### Publishing Snaps
+
+NOTE: For now, you will have to manually do:
+
+```sh
+snapcraft upload --release=beta out/make/pledger-*.snap
+```
+
+We'd like to use the following:
+
+```json
+{
+  "name": "@electron-forge/publisher-snapcraft",
+  "config": {
+    "release": "beta"
+  }
+}
+```
+
+but first we need a solution to:
+https://github.com/davidwinter/electron-forge-maker-snap/issues/38

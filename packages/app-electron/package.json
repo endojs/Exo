@@ -63,7 +63,7 @@
           "config": {
             "name": "pledger",
             "confinement": "strict",
-	    "executableName": "pledger"
+            "executableName": "pledger"
           }
         },
         {
@@ -82,10 +82,6 @@
         }
       ],
       "publishers": [
-        {
-          "name": "@electron-forge/publisher-snapcraft",
-          "config": {}
-        },
         {
           "name": "@electron-forge/publisher-github",
           "config": {
