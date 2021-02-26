@@ -1,9 +1,7 @@
 import '@agoric/install-ses';
 import { makeCapTP, E } from '@agoric/captp';
-import { app, autoUpdater, BrowserWindow, Menu, shell, Tray } from 'electron';
+import { app, BrowserWindow, Menu, shell, Tray } from 'electron';
 import path from 'path';
-import fs from 'fs';
-import os from 'os';
 
 const WALLET_PORT = 8000;
 
@@ -34,38 +32,21 @@ async function main(args, isProduction) {
   // Start the ag-solo running.
   E(appPlugin).fork('Agoric', 'ag-solo', 'setup');
 
-  let quitting = false;
-  app.on('before-quit', () => {
-    // If they hit C-q, treat it as a full exit.
-    quitting = true;
-  });
-
+  let cleanup = false;
   app.on('will-quit', e => {
-    // A tiny state machine to clean up before exiting.
-    if (quitting === 'cleanup') {
-      e.preventDefault();
-    }
-    if (quitting !== true) {
+    if (cleanup) {
       return;
     }
-    quitting = 'cleanup';
+    
+    cleanup = true;
+    e.preventDefault();
     E(appPlugin).dispose().finally(() => app.exit());
   })
 
-  // If auto updating was accepted, allow quitting.
-  autoUpdater.on('before-quit-for-update', () => {
-    quitting = true;
-  });
-
-  let dashboardWindow = null;
   const createDashboardWindow = async () => {
-    app.dock && app.dock.show();
-    if (dashboardWindow) {
-      dashboardWindow.show();
-      return;
-    }
+
     // Create the browser window.
-    dashboardWindow = new BrowserWindow({
+    const dashboardWindow = new BrowserWindow({
       width: 1024,
       height: 700,
       webPreferences: {
@@ -75,23 +56,19 @@ async function main(args, isProduction) {
       },
     });
 
-    // Just hide.
-    dashboardWindow.on('close', e => {
-      if (!quitting) {
-        e.preventDefault();
-        dashboardWindow.hide();
-        app.dock && app.dock.hide();
-      }
-    });
-
     const send = obj => {
       // console.log('FIGME: main posting', obj);
-      if (!quitting) {
+      if (!cleanup) {
         dashboardWindow.webContents.send('host', obj);
       }
     };
 
     const { dispatch, abort } = makeCapTP('renderer', send, appPlugin);
+
+    dashboardWindow.on('close', () => {
+      // Close the captp connection successfully.
+      abort();
+    });
 
     dashboardWindow.webContents.on('ipc-message', async (ev, channel, obj) => {
       // console.log('FIGME: main received on', channel, obj);
@@ -134,19 +111,6 @@ async function main(args, isProduction) {
     if (args[0] === 'dash') {
       // Pop up the dashboard immediately.
       createDashboardWindow();
-    } else {
-      // Hide the dock icon.
-      app.dock && app.dock.hide();
-      const ALREADY_POPPED_STAMP = path.join(os.homedir(), '.agoric', 'already-popped.stamp');
-      if (!fs.existsSync(ALREADY_POPPED_STAMP)) {
-        // Pop up the context menu for engagement.
-        const { x, y } = appTray.getBounds();
-        appTray.popUpContextMenu(contextMenu, { x, y });
-
-        // Write out the stamp.
-        fs.mkdirSync(path.dirname(ALREADY_POPPED_STAMP), { recursive: true, mode: 0o700 });
-        fs.writeFileSync(ALREADY_POPPED_STAMP, app.getVersion());
-      }
     }
   };
 
@@ -155,18 +119,15 @@ async function main(args, isProduction) {
   // Some APIs can only be used after this event occurs.
   // app.on('ready', createWindow);
   app.on('ready', createTray);
-  
 
   // Quit when all windows are closed, except on macOS. There, it's common
   // for applications and their menu bar to stay active until the user quits
   // explicitly with Cmd + Q.
-  /*
   app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
       app.quit();
     }
   });
-  */
 
   app.on('activate', () => {
     // On OS X it's common to re-create a window in the app when the
