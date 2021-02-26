@@ -1,0 +1,100 @@
+name: Release
+on:
+  push:
+    branches: [master] # FIXME: just for testing.
+    tags:
+      - 'v*'
+      
+jobs:
+
+  publish_on_linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2       
+#    - uses: actions/setup-node@master
+#      with:
+#        node-version: 12
+#    - name: install dependencies
+#      run: yarn install
+#    - name: build binaries
+#      run: yarn build
+    - name: install snapcraft
+      run: sudo snap install snapcraft --classic
+    - name: login to snapcraft
+      env:
+        # This $SNAPCRAFT_TOKEN comes from:
+        # snapcraft export-login --snaps pledger --channels beta --acls -
+        SNAPCRAFT_TOKEN: ${{ secrets.SNAPCRAFT_TOKEN }}
+      run: echo "$SNAPCRAFT_TOKEN" | snapcraft login --with -
+    - name: publish electron
+      env:
+        SNAPCRAFT_BUILD_ENVIRONMENT: host
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: cd packages/app-electron && yarn publish:electron
+
+  publish_on_mac:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+#    - uses: actions/setup-node@master
+#      with:
+#        node-version: 12
+#    - name: install dependencies
+#      run: yarn install
+#    - name: build binaries
+#      run: yarn build
+    - name: install signing identity
+      env:
+        # This APPLE_DEVELOPER_KEY_P12 comes from:
+        # keychain export of the developer key with no password to devkey.p12
+        # Then: base64 < devkey.p12
+        APPLE_DEVELOPER_KEY_P12: ${{ secrets.APPLE_DEVELOPER_KEY_P12 }}
+
+      # May need:
+      # security create-keychain -p mypassword electron.keychain
+      # security unlock-keychain -p mypassword electron.keychain
+      run: |-
+        echo "$APPLE_DEVELOPER_KEY_P12" | base64 -d > ~/DeveloperKey.p12
+        security import ~/DeveloperKey.p12 -P '' -A
+        rm ~/DeveloperKey.p12
+    - name: install notarize auth key
+      env:
+        # This APPLE_NOTARIZE_AUTHKEY
+        APPLE_NOTARIZE_AUTHKEY: ${{ secrets.APPLE_NOTARIZE_AUTHKEY }}
+        # This APPLE_NOTARIZE_FILE is something like 
+        APPLE_NOTARIZE_FILE: ${{ secrets.APPLE_NOTARIZE_FILE }}
+      run: |-
+        mkdir -p -m0700 ~/.private_keys
+        echo "$APPLE_NOTARIZE_AUTHKEY" > ~/.private_keys/"$APPLE_NOTARIZE_FILE"
+    - name: publish electron
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: cd packages/app-electron && yarn publish:electron
+
+
+  publish_on_win:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2       
+#    - uses: actions/setup-node@master
+#      with:
+#        node-version: 12
+#    - name: install dependencies
+#      run: yarn install
+#    - name: build binaries
+#      run: yarn build
+    - name: install signing identity
+      env:
+        # Obtained by exporting Sectigo key from certmgr to devkey.pfx
+        # base64 < devkey.pfx
+        WINDOWS_DEVELOPER_KEY_PFX: ${{ secrets.WINDOWS_DEVELOPER_KEY_PFX }}
+      run: |-
+        $Pwd = ConvertTo-SecureString insecure -AsPlainText -Force
+        $Content = [System.Convert]::FromBase64String($env:WINDOWS_DEVELOPER_KEY_PFX)
+        Set-Content -Path $env:temp\devkey.pfx -Value $Content -Encoding byte
+        Import-PfxCertificate -Password $Pwd -FilePath $env:temp\devkey.pfx
+        Remove-Item $env:temp\devkey.pfx
+    - name: publish electron
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: cd packages/app-electron && yarn publish:electron
