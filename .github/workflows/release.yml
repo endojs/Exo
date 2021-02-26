@@ -60,10 +60,10 @@ jobs:
         SNAPCRAFT_TOKEN: ${{ secrets.SNAPCRAFT_TOKEN }}
       run: echo "$SNAPCRAFT_TOKEN" | snapcraft login --with -
     - name: publish to snapcraft
-      # Use "beta" channel for releases containing '-', "edge" otherwise.
+      # Use just "edge" channel for releases containing '-', "beta,edge" otherwise.
       run: |-
         cd packages/app-electron
-        release=$(node -e "console.log(/-/.test(JSON.parse(require('fs').readFileSync('./package.json','utf-8')).version)?'edge':'beta')")
+        release=$(node -e "console.log(/-/.test(JSON.parse(require('fs').readFileSync('./package.json','utf-8')).version)?'edge':'beta,edge')")
         snapcraft upload --release=$release out/make/*.snap
 
   publish_on_mac:
