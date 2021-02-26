@@ -2,7 +2,7 @@
 name: Release
 on:
   push:
-    branches: [master] # FIXME: just for testing.
+    # branches: [master] # just for testing.
     tags:
       - 'v*'
       
