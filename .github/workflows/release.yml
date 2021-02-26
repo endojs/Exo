@@ -1,3 +1,4 @@
+# NOTE: Secrets need to be synchronized with packages/app-electron/package.json
 name: Release
 on:
   push:
@@ -11,13 +12,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2       
-#    - uses: actions/setup-node@master
-#      with:
-#        node-version: 12
-#    - name: install dependencies
-#      run: yarn install
-#    - name: build binaries
-#      run: yarn build
+    - uses: actions/setup-node@master
+      with:
+        node-version: 12
+    - name: install dependencies
+      run: yarn install
+    - uses: actions/setup-go@v2
+      with:
+        go-version: '^1.15.0'
+    - name: build binaries
+      run: yarn build
     - name: install snapcraft
       run: sudo snap install snapcraft --classic
     - name: login to snapcraft
@@ -36,32 +40,31 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
-#    - uses: actions/setup-node@master
-#      with:
-#        node-version: 12
-#    - name: install dependencies
-#      run: yarn install
-#    - name: build binaries
-#      run: yarn build
+    - uses: actions/setup-node@master
+      with:
+        node-version: 12
+    - name: install dependencies
+      run: yarn install
+    - uses: actions/setup-go@v2
+      with:
+        go-version: '^1.15.0'
+    - name: build binaries
+      run: yarn build
     - name: install signing identity
       env:
         # This APPLE_DEVELOPER_KEY_P12 comes from:
         # keychain export of the developer key with no password to devkey.p12
         # Then: base64 < devkey.p12
         APPLE_DEVELOPER_KEY_P12: ${{ secrets.APPLE_DEVELOPER_KEY_P12 }}
-
-      # May need:
-      # security create-keychain -p mypassword electron.keychain
-      # security unlock-keychain -p mypassword electron.keychain
       run: |-
         echo "$APPLE_DEVELOPER_KEY_P12" | base64 -d > ~/DeveloperKey.p12
         security import ~/DeveloperKey.p12 -P '' -A
         rm ~/DeveloperKey.p12
     - name: install notarize auth key
       env:
-        # This APPLE_NOTARIZE_AUTHKEY
+        # This APPLE_NOTARIZE_AUTHKEY comes from
         APPLE_NOTARIZE_AUTHKEY: ${{ secrets.APPLE_NOTARIZE_AUTHKEY }}
-        # This APPLE_NOTARIZE_FILE is something like 
+        # This APPLE_NOTARIZE_FILE is something like AuthKey_FOOBAR.p8
         APPLE_NOTARIZE_FILE: ${{ secrets.APPLE_NOTARIZE_FILE }}
       run: |-
         mkdir -p -m0700 ~/.private_keys
@@ -76,13 +79,16 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2       
-#    - uses: actions/setup-node@master
-#      with:
-#        node-version: 12
-#    - name: install dependencies
-#      run: yarn install
-#    - name: build binaries
-#      run: yarn build
+    - uses: actions/setup-node@master
+      with:
+        node-version: 12
+    - name: install dependencies
+      run: yarn install
+    - uses: actions/setup-go@v2
+      with:
+        go-version: '^1.15.0'
+    - name: build binaries
+      run: yarn build
     - name: install signing identity
       env:
         # Obtained by exporting Sectigo key from certmgr to devkey.pfx
