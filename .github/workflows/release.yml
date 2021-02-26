@@ -94,8 +94,10 @@ jobs:
         # Then: base64 < devkey.p12
         APPLE_DEVELOPER_KEY_P12: ${{ secrets.APPLE_DEVELOPER_KEY_P12 }}
       run: |-
+        security create-keychain -p insecure developer.keychain
+        security unlock-keychain -p insecure developer.keychain
         echo "$APPLE_DEVELOPER_KEY_P12" | base64 -d > ~/DeveloperKey.p12
-        security import ~/DeveloperKey.p12 -P '' -A
+        security import ~/DeveloperKey.p12 -k developer.keychain -P '' -A
         rm ~/DeveloperKey.p12
     - name: install notarize auth key
       env:
