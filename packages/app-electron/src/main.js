@@ -1,6 +1,6 @@
 import '@agoric/install-ses';
 import { makeCapTP, E } from '@agoric/captp';
-import { app, BrowserWindow, Menu, shell, Tray } from 'electron';
+import { app, autoUpdater, BrowserWindow, Menu, shell, Tray } from 'electron';
 import path from 'path';
 
 const WALLET_PORT = 8000;
@@ -120,19 +120,15 @@ async function main(args, isProduction) {
   // app.on('ready', createWindow);
   app.on('ready', createTray);
 
-  // Quit when all windows are closed, except on macOS. There, it's common for
-  // applications and their menu bar to stay active until the user quits
-  // explicitly with Cmd + Q.
-  //
-  // NOTE(michaelfig): We don't do this because we want the system tray to stay
-  // alive on all platforms, unless explicitly quit.
-  /*
+  // We have a tray that we want to stay active until the user quits
+  // explicitly with Cmd + Q, or there is an auto-update.
+  let installingUpdate = false;
+  autoUpdater.on('before-quit-for-update', () => installingUpdate = true);
   app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
+    if (installingUpdate) { //  || process.platform !== 'darwin'
       app.quit();
     }
   });
-  */
 
   app.on('activate', () => {
     // On OS X it's common to re-create a window in the app when the
