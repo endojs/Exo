@@ -56,11 +56,15 @@ jobs:
     - name: login to snapcraft
       env:
         # This $SNAPCRAFT_TOKEN comes from:
-        # snapcraft export-login --snaps pledger --channels beta -
+        # snapcraft export-login --snaps pledger --channels beta,edge -
         SNAPCRAFT_TOKEN: ${{ secrets.SNAPCRAFT_TOKEN }}
       run: echo "$SNAPCRAFT_TOKEN" | snapcraft login --with -
     - name: publish to snapcraft
-      run: cd packages/app-electron && snapcraft upload --release=beta out/make/*.snap
+      # Use "beta" channel for releases containing '-', "edge" otherwise.
+      run: |-
+        cd packages/app-electron
+        release=$(node -e "console.log(/-/.test(JSON.parse(require('fs').readFileSync('./package.json','utf-8')).version)?'edge':'beta')")
+        snapcraft upload --release=$release out/make/*.snap
 
   publish_on_mac:
     runs-on: macos-latest

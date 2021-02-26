@@ -2,7 +2,7 @@
   "name": "@pledger/app-electron",
   "productName": "Pledger",
   "private": true,
-  "version": "0.2.2-dev.3",
+  "version": "0.2.2-dev.4",
   "description": "Agoric Pledger Wallet",
   "main": "./src/entrypoint.cjs",
   "repository": "https+git://github.com/agoric-labs/Pledger",
