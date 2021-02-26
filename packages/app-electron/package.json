@@ -2,7 +2,7 @@
   "name": "@pledger/app-electron",
   "productName": "Pledger",
   "private": true,
-  "version": "0.2.2-dev.1",
+  "version": "0.2.2-dev.3",
   "description": "Agoric Pledger Wallet",
   "main": "./src/entrypoint.cjs",
   "repository": "https+git://github.com/agoric-labs/Pledger",
@@ -43,6 +43,7 @@
         ],
         "osxSign": {
           "identity": "Developer ID Application: Michael FIG (38WBP7G9A5)",
+          "keychain": "developer.keychain",
           "hardenedRuntime": true,
           "entitlements": "build/entitlements.mac.plist",
           "entitlements-inherit": "build/entitlements.mac.plist",
