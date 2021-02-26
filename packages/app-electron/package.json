@@ -3,7 +3,7 @@
   "productName": "Pledger",
   "private": true,
   "version": "0.2.2-dev.0",
-  "description": "Pledger Electron frontend",
+  "description": "Agoric Pledger Wallet",
   "main": "./src/entrypoint.cjs",
   "repository": "https+git://github.com/agoric-labs/Pledger",
   "workspaces": {
@@ -116,6 +116,6 @@
     "@electron-forge/publisher-github": "file:assets/electron-forge-publisher-github-v6.0.0-beta.53.tgz",
     "@electron-forge/publisher-snapcraft": "6.0.0-beta.54",
     "concurrently": "^5.3.0",
-    "electron": "^11.3.0"
+    "electron": "^10.1.3"
   }
 }
