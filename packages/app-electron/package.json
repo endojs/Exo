@@ -43,7 +43,6 @@
         ],
         "osxSign": {
           "identity": "Developer ID Application: Michael FIG (38WBP7G9A5)",
-          "keychain": "developer.keychain",
           "hardenedRuntime": true,
           "entitlements": "build/entitlements.mac.plist",
           "entitlements-inherit": "build/entitlements.mac.plist",

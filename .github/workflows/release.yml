@@ -102,15 +102,20 @@ jobs:
     - name: install signing identity
       env:
         # This APPLE_DEVELOPER_KEY_P12 comes from:
-        # keychain export of the developer key with no password to devkey.p12
-        # Then: base64 < devkey.p12
+        # keychain export devkey.p12 with password $APPLE_DEVELOPER_PWD
+        # Then: base64 devkey.p12
         APPLE_DEVELOPER_KEY_P12: ${{ secrets.APPLE_DEVELOPER_KEY_P12 }}
+        APPLE_DEVELOPER_PWD: ${{ secrets.APPLE_DEVELOPER_PWD }}
+        # This incantation was gleaned from
+        # https://localazy.com/blog/how-to-automatically-sign-macos-apps-using-github-actions
       run: |-
-        security create-keychain -p insecure developer.keychain
-        security unlock-keychain -p insecure developer.keychain
+        security create-keychain -p "$APPLE_DEVELOPER_PWD" build.keychain
+        security default-keychain -s build.keychain
+        security unlock-keychain -p "$APPLE_DEVELOPER_PWD" build.keychain
         echo "$APPLE_DEVELOPER_KEY_P12" | base64 -d > ~/DeveloperKey.p12
-        security import ~/DeveloperKey.p12 -k developer.keychain -P '' -A
+        security import ~/DeveloperKey.p12 -k build.keychain -P "$APPLE_DEVELOPER_PWD" -T /usr/bin/codesign
         rm ~/DeveloperKey.p12
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$APPLE_DEVELOPER_PWD" build.keychain
     - name: install notarize auth key
       env:
         # This APPLE_NOTARIZE_AUTHKEY comes from
@@ -165,11 +170,12 @@ jobs:
         # Obtained by exporting Sectigo key from certmgr to devkey.pfx
         # base64 < devkey.pfx
         WINDOWS_DEVELOPER_KEY_PFX: ${{ secrets.WINDOWS_DEVELOPER_KEY_PFX }}
+        WINDOWS_DEVELOPER_PWD: ${{ secrets.WINDOWS_DEVELOPER_PWD }}
       run: |-
-        $InsecurePasswd = ConvertTo-SecureString insecure -AsPlainText -Force
+        $DevPassword = ConvertTo-SecureString $env:WINDOWS_DEVELOPER_PWD -AsPlainText -Force
         $Content = [System.Convert]::FromBase64String($env:WINDOWS_DEVELOPER_KEY_PFX)
         Set-Content -Path $env:temp\devkey.pfx -Value $Content -AsByteStream
-        Import-PfxCertificate -Password $InsecurePasswd -FilePath $env:temp\devkey.pfx -CertStoreLocation Cert:\CurrentUser\My
+        Import-PfxCertificate -Password $DevPassword -FilePath $env:temp\devkey.pfx -CertStoreLocation Cert:\CurrentUser\My
         Remove-Item $env:temp\devkey.pfx
     - name: build electron packages
       run: cd packages/app-electron && yarn publish:electron --dry-run
