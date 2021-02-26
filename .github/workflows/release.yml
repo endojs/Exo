@@ -52,7 +52,7 @@ jobs:
     - name: login to snapcraft
       env:
         # This $SNAPCRAFT_TOKEN comes from:
-        # snapcraft export-login --snaps pledger --channels beta --acls -
+        # snapcraft export-login --snaps pledger --channels beta -
         SNAPCRAFT_TOKEN: ${{ secrets.SNAPCRAFT_TOKEN }}
       run: echo "$SNAPCRAFT_TOKEN" | snapcraft login --with -
     - name: publish to snapcraft
@@ -148,10 +148,10 @@ jobs:
         # base64 < devkey.pfx
         WINDOWS_DEVELOPER_KEY_PFX: ${{ secrets.WINDOWS_DEVELOPER_KEY_PFX }}
       run: |-
-        $Pwd = ConvertTo-SecureString insecure -AsPlainText -Force
+        $InsecurePasswd = ConvertTo-SecureString insecure -AsPlainText -Force
         $Content = [System.Convert]::FromBase64String($env:WINDOWS_DEVELOPER_KEY_PFX)
         Set-Content -Path $env:temp\devkey.pfx -Value $Content -AsByteStream
-        Import-PfxCertificate -Password $Pwd -FilePath $env:temp\devkey.pfx
+        Import-PfxCertificate -Password $InsecurePasswd -FilePath $env:temp\devkey.pfx -CertStoreLocation Cert:\CurrentUser\My
         Remove-Item $env:temp\devkey.pfx
     - name: build electron packages
       run: cd packages/app-electron && yarn publish:electron --dry-run
