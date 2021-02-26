@@ -1,6 +1,6 @@
 import '@agoric/install-ses';
 import { makeCapTP, E } from '@agoric/captp';
-import { app, BrowserWindow, Menu, shell, Tray } from 'electron';
+import { app, autoUpdater, BrowserWindow, Menu, shell, Tray } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
@@ -40,8 +40,20 @@ async function main(args, isProduction) {
     quitting = true;
   });
 
+  app.on('will-quit', e => {
+    // A tiny state machine to clean up before exiting.
+    if (quitting === 'cleanup') {
+      e.preventDefault();
+    }
+    if (quitting !== true) {
+      return;
+    }
+    quitting = 'cleanup';
+    E(appPlugin).dispose().finally(() => app.exit());
+  })
+
   // If auto updating was accepted, allow quitting.
-  app.on('before-quit-for-update', () => {
+  autoUpdater.on('before-quit-for-update', () => {
     quitting = true;
   });
 
@@ -74,7 +86,9 @@ async function main(args, isProduction) {
 
     const send = obj => {
       // console.log('FIGME: main posting', obj);
-      dashboardWindow.webContents.send('host', obj);
+      if (!quitting) {
+        dashboardWindow.webContents.send('host', obj);
+      }
     };
 
     const { dispatch, abort } = makeCapTP('renderer', send, appPlugin);
@@ -109,9 +123,8 @@ async function main(args, isProduction) {
       { type: 'separator' },
       { label: 'Pledger Dashboard...', click: createDashboardWindow },
       { type: 'separator' },
-      { label: 'Quit Pledger', click() {
-        E(appPlugin).dispose().finally(() => app.quit());
-      } },
+      { role: 'about' },
+      { role: 'quit' },
     ]);
 
     appTray.setToolTip('Pledger Wallet');

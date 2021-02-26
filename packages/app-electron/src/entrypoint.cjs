@@ -3,7 +3,7 @@ const PRODUCTION = !require('electron-is-dev');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
-  process.exit(1);
+  return;
 }
 
 const args = PRODUCTION ? process.argv.slice(1) : process.argv.slice(2);
