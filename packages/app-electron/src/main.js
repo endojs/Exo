@@ -43,10 +43,18 @@ async function main(args, isProduction) {
     E(appPlugin).dispose().finally(() => app.exit());
   })
 
+  let dashboardWindow = null;
   const createDashboardWindow = async () => {
+    if (dashboardWindow) {
+      if (dashboardWindow.isMinimized()) {
+        dashboardWindow.restore();
+      }
+      dashboardWindow.focus();
+      return dashboardWindow;
+    }      
 
     // Create the browser window.
-    const dashboardWindow = new BrowserWindow({
+    dashboardWindow = new BrowserWindow({
       width: 1024,
       height: 700,
       webPreferences: {
@@ -68,6 +76,7 @@ async function main(args, isProduction) {
     dashboardWindow.on('close', () => {
       // Close the captp connection successfully.
       abort();
+      dashboardWindow = null;
     });
 
     dashboardWindow.webContents.on('ipc-message', async (ev, channel, obj) => {
@@ -82,8 +91,16 @@ async function main(args, isProduction) {
     // and load the index.html of the app.
     const uiIndex = await E(appPlugin).getUiIndex();
     await dashboardWindow.loadFile(uiIndex);
+    return dashboardWindow;
   };
 
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (dashboardWindow) {
+      createDashboardWindow();
+    }
+  });
+  
   let appTray = null;
   const createTray = async () => {
     const icon = process.platform === 'win32' ? 'agoric.ico' : 'agoric-systray.png';
@@ -142,4 +159,11 @@ async function main(args, isProduction) {
   // code. You can also put them in separate files and import them here.
 };
 
-export default main;
+export default function singleInstanceMain(...args) {
+  const { app } = require('electron')
+  const gotTheLock = app.requestSingleInstanceLock()
+  if (gotTheLock) {
+    return main(...args);
+  }
+  app.quit();
+}
