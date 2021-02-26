@@ -38,18 +38,25 @@ jobs:
     - name: build binaries
       run: yarn build
     - name: install snapcraft
-      run: sudo snap install snapcraft --classic
+      run: |-
+        sudo snap install snapcraft --classic
+        sudo snap install review-tools
+    - name: build electron packages
+      env:
+        SNAPCRAFT_BUILD_ENVIRONMENT: host
+      run: cd packages/app-electron && yarn publish:electron --dry-run
+    - name: publish electron packages
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: cd packages/app-electron && yarn publish:electron --from-dry-run
     - name: login to snapcraft
       env:
         # This $SNAPCRAFT_TOKEN comes from:
         # snapcraft export-login --snaps pledger --channels beta --acls -
         SNAPCRAFT_TOKEN: ${{ secrets.SNAPCRAFT_TOKEN }}
       run: echo "$SNAPCRAFT_TOKEN" | snapcraft login --with -
-    - name: publish electron
-      env:
-        SNAPCRAFT_BUILD_ENVIRONMENT: host
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: cd packages/app-electron && yarn publish:electron
+    - name: publish to snapcraft
+      run: cd packages/app-electron && snapcraft upload --release=beta out/make/*.snap
 
   publish_on_mac:
     runs-on: macos-latest
@@ -99,11 +106,12 @@ jobs:
       run: |-
         mkdir -p -m0700 ~/.private_keys
         echo "$APPLE_NOTARIZE_AUTHKEY" > ~/.private_keys/"$APPLE_NOTARIZE_FILE"
-    - name: publish electron
+    - name: build electron packages
+      run: cd packages/app-electron && yarn publish:electron --dry-run
+    - name: publish electron packages
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: cd packages/app-electron && yarn publish:electron
-
+      run: cd packages/app-electron && yarn publish:electron --from-dry-run
 
   publish_on_win:
     runs-on: windows-latest
@@ -142,10 +150,12 @@ jobs:
       run: |-
         $Pwd = ConvertTo-SecureString insecure -AsPlainText -Force
         $Content = [System.Convert]::FromBase64String($env:WINDOWS_DEVELOPER_KEY_PFX)
-        Set-Content -Path $env:temp\devkey.pfx -Value $Content -Encoding byte
+        Set-Content -Path $env:temp\devkey.pfx -Value $Content -AsByteStream
         Import-PfxCertificate -Password $Pwd -FilePath $env:temp\devkey.pfx
         Remove-Item $env:temp\devkey.pfx
-    - name: publish electron
+    - name: build electron packages
+      run: cd packages/app-electron && yarn publish:electron --dry-run
+    - name: publish electron packages
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: cd packages/app-electron && yarn publish:electron
+      run: cd packages/app-electron && yarn publish:electron --from-dry-run
