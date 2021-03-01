@@ -14,7 +14,6 @@
   "scripts": {
     "start": "concurrently \"npm:ui-dev\" \"electron-forge start\"",
     "build": "exit 0",
-    "no-postinstall": "node scripts/link-electron.cjs",
     "postinstall": "patch-package&&cd node_modules/@pledger/plugin-agoric-app&&yarn build:electron",
     "package": "electron-forge package",
     "make": "electron-forge make",
@@ -113,7 +112,7 @@
     "@electron-forge/maker-snap": "^6.0.0-beta.54",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
-    "@electron-forge/publisher-github": "file:assets/electron-forge-publisher-github-v6.0.0-beta.53.tgz",
+    "@electron-forge/publisher-github": "^6.0.0-beta.54",
     "@electron-forge/publisher-snapcraft": "6.0.0-beta.54",
     "concurrently": "^5.3.0",
     "electron": "^10.1.3"

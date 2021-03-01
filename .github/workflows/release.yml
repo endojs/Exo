@@ -20,6 +20,10 @@ jobs:
         go-version: '^1.15.0'
     - uses: actions/cache@v2
       with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+    - uses: actions/cache@v2
+      with:
         # In order:
         # * Module download cache
         # * Build cache (Linux)
@@ -72,6 +76,10 @@ jobs:
     - uses: actions/setup-go@v2
       with:
         go-version: '^1.15.0'
+    - uses: actions/cache@v2
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
     - uses: actions/cache@v2
       with:
         # In order:
@@ -134,6 +142,10 @@ jobs:
     - uses: actions/setup-go@v2
       with:
         go-version: '^1.15.0'
+    - uses: actions/cache@v2
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
     - uses: actions/cache@v2
       with:
         # In order:
