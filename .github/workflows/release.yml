@@ -61,6 +61,7 @@ jobs:
     - name: build electron packages
       env:
         SNAPCRAFT_BUILD_ENVIRONMENT: host
+        DEBUG: 'electron-forge-maker-snap:*,electron-forge:lifecycle'
       run: cd packages/app-electron && yarn publish:electron --dry-run
     - name: publish electron packages
       env:
