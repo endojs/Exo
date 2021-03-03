@@ -115,7 +115,14 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-go-
     - name: install dependencies
+      env:
+        # We need this to prevent conflicting binary downloads.
+        # (One for packages/app-electron, and one for packages/plugin-agoric-app)
+        ELECTRON_SKIP_BINARY_DOWNLOAD: true
       run: yarn install
+    - name: download electron
+      # Now do the binary download once.
+      run: node packages/app-electron/node_modules/electron/install.js
     - name: build binaries
       run: yarn build
     - name: install signing identity
@@ -187,7 +194,14 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-go-
     - name: install dependencies
+      env:
+        # We need this to prevent conflicting binary downloads.
+        # (One for packages/app-electron, and one for packages/plugin-agoric-app)
+        ELECTRON_SKIP_BINARY_DOWNLOAD: true
       run: yarn install
+    - name: download electron
+      # Now do the binary download once.
+      run: node packages/app-electron/node_modules/electron/install.js
     - name: build binaries
       run: yarn build
     - name: install signing identity
