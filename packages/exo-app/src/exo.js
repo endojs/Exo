@@ -38,6 +38,7 @@ import { makePromiseKit } from './promise-kit.js';
 import { makeCapTPConnection } from './captp-conn.js';
 import { spawnBackEndo } from './endo-back-manager.js';
 import { whereExoSock } from './exo-sock.js';
+import { getNodePath } from './node-path.js';
 
 function sink(error) {
   console.error(error);
@@ -80,6 +81,9 @@ export async function main({ _args, electron, electronReload, isProduction }) {
 
   const exoConsoleBundle = await bundleSource(exoConsolePath);
   const sockPath = whereExoSock(process.platform, process.env);
+
+  const nodePath = await getNodePath(popen.fork);
+  console.log('Node path', nodePath);
 
   // This is needed to map the Pledger systray to the signing certificate.  For
   // non-production runs we use a different value.
