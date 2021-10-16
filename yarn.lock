@@ -1535,10 +1535,10 @@
   dependencies:
     requireindex "~1.1.0"
 
-"@endo/netstring@^0.2.8":
-  version "0.2.8"
-  resolved "https://registry.yarnpkg.com/@endo/netstring/-/netstring-0.2.8.tgz#2496a6129da4cdebdd339558c82594f7207f65cc"
-  integrity sha512-lylPcoiGKLzDeeNH4kgNYz/sUa/ohq3t+6llvMItfIkiU+dVPZob7apT8AzQXD2sDXRqm7ZhcSpfeDA7YCxawQ==
+"@endo/netstring@^0.2.9":
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/@endo/netstring/-/netstring-0.2.9.tgz#bbc8e2ec28b1f6df9d7c4acc3448d92475abc546"
+  integrity sha512-6kwckIiKsWSjdyxnB1ov9yf7rLRkLWOL8UhuF34ns6JJQhQVMdQLT/wOSImUoYgXetf1V3ntoR9+VNcNCT6foQ==
 
 "@endo/static-module-record@^0.6.3":
   version "0.6.3"
