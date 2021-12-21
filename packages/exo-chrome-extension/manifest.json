@@ -1,0 +1,35 @@
+{
+  "name": "Endo",
+  "description": "A bridge to Hardened JavaScript",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": [
+    "nativeMessaging"
+  ],
+  "host_permissions": [
+    "*://*/*"
+  ],
+  "icons": {
+    "16":  "/asset/exo-16.png",
+    "32":  "/asset/exo-32.png",
+    "48":  "/asset/exo-48.png",
+    "128": "/asset/exo-128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16":  "/asset/exo-16.png",
+      "32":  "/asset/exo-32.png",
+      "48":  "/asset/exo-48.png",
+      "128": "/asset/exo-128.png"
+    }
+  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["content.js"]
+  }],
+  "options_page": "options.html"
+}

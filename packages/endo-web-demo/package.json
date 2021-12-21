@@ -1,0 +1,15 @@
+{
+  "name": "endo-web-demo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "parcel serve demo.html --port=8000 --dist-dir dist"
+  },
+  "dependencies": {
+    "@agoric/captp": "^1.10.7",
+    "@agoric/eventual-send": "^0.14.0",
+    "@agoric/far": "^0.1.1",
+    "parcel": "2",
+    "ses": "0.14"
+  }
+}

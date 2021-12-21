@@ -4,17 +4,6 @@
 
 // @ts-check
 
-/**
- * @template T
- * @template U
- * @template V
- * @typedef {import('./stream.js').Stream<T, U, V>} Stream
- */
-
-/**
- * @template T
- * @typedef {import('./promise-kit.js').PromiseRecord<T>} PromiseRecord
- */
 import { makePromiseKit } from './promise-kit.js';
 import { pipe } from './stream.js';
 
@@ -26,11 +15,11 @@ import { pipe } from './stream.js';
  *
  * @param {NodeJS.WritableStream} output the destination Node.js writer
  * @param {string} [name] a debug name for stream errors
- * @returns {Stream<void, Uint8Array, void>}
+ * @returns {import('./stream.js').Writer<Uint8Array, void>}
  */
 export function nodeWriter(output, name = '<unnamed stream>') {
   /**
-   * @type {PromiseRecord<void>}
+   * @type {import('./promise-kit.js').PromiseKit<void>}
    */
   let drained = makePromiseKit();
 

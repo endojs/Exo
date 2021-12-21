@@ -9,8 +9,13 @@ import { jsonWriter } from './json-writer.js';
 import { jsonReader } from './json-reader.js';
 
 function makeCapTPMessageStreams(name, writer, reader, near) {
+
+  const send = message => {
+    return writer.next(message);
+  };
+
   // TODO cancellation context
-  const { dispatch, getBootstrap, abort } = makeCapTP(name, writer.next, near);
+  const { dispatch, getBootstrap, abort } = makeCapTP(name, send, near);
 
   const drained = (async () => {
     for await (const message of reader) {

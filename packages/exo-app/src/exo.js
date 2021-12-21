@@ -38,7 +38,7 @@ import { makePromiseKit } from './promise-kit.js';
 import { makeCapTPConnection } from './captp-conn.js';
 import { spawnBackEndo } from './endo-back-manager.js';
 import { whereExoSock } from './exo-sock.js';
-import { getNodePath } from './node-path.js';
+import { installChromeNativeMessagingHost } from './native-messaging-host-installer.js';
 
 function sink(error) {
   console.error(error);
@@ -48,8 +48,29 @@ function resourcePath(url) {
   return fileURLToPath(new URL(url, import.meta.url));
 }
 
+const writeExecutable = async (path, content) => {
+  return fs.promises.writeFile(path, content, { mode: 0o755 });
+};
+const write= async (path, content) => {
+  return fs.promises.writeFile(path, content);
+};
+
+async function installChrome() {
+  const nodePath = process.argv[0];
+  await installChromeNativeMessagingHost({
+    write,
+    writeExecutable
+  }, {
+    platform: process.platform,
+    env: process.env,
+    nodePath,
+  });
+
+  console.log('Installed Chrome native messaging host');
+}
+
 export async function main({ _args, electron, electronReload, isProduction }) {
-  const { app, autoUpdater, BrowserWindow, Menu, Tray, ipcMain } = electron;
+  const { app, autoUpdater, BrowserWindow, Menu, Tray, ipcMain, shell } = electron;
 
   if (!app.requestSingleInstanceLock()) {
     app.quit();
@@ -68,6 +89,8 @@ export async function main({ _args, electron, electronReload, isProduction }) {
     });
   }
 
+  installChrome();
+
   const frontEndoHtmlUrl = await importMetaResolve(
     '../public/front-endo.html',
     import.meta.url,
@@ -81,9 +104,6 @@ export async function main({ _args, electron, electronReload, isProduction }) {
 
   const exoConsoleBundle = await bundleSource(exoConsolePath);
   const sockPath = whereExoSock(process.platform, process.env);
-
-  const nodePath = await getNodePath(popen.fork);
-  console.log('Node path', nodePath);
 
   // This is needed to map the Pledger systray to the signing certificate.  For
   // non-production runs we use a different value.
@@ -197,7 +217,9 @@ export async function main({ _args, electron, electronReload, isProduction }) {
             })
             .catch(sink);
           const bootstrap = getBootstrap();
-          const endo = Far('Endo', {}); // TODO make a power facet for this specific instance.
+          // TODO make a power facet for this specific instance.
+          const endo = Far('Endo', {
+          });
           const api = E(bootstrap).importBundle(bundle, endo, grantedPowers);
           return Far('BackEndo', {
             getAPI() {

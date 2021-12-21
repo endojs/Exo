@@ -40,11 +40,13 @@ import '@agoric/eventual-send/shim.js';
 import './lockdown.js';
 import { makeCapTP } from '@agoric/captp';
 import { Far } from '@agoric/marshal';
+import { E } from '@agoric/eventual-send';
 import { importBundle } from '@agoric/import-bundle';
 
-const makeEndoFacet = (_endo, _grantedPowers) => {
+const makeEndoFacet = (endo, _grantedPowers) => {
   // Provide attenuated access to any granted powers.
-  return harden({});
+  return harden({
+  });
 };
 
 const send = message => {

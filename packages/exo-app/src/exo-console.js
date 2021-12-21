@@ -12,8 +12,49 @@
 /* global document */
 
 import { Far } from '@agoric/marshal';
+import { E } from '@agoric/eventual-send';
+
+const stamp = message => {
+  return `${new Date().toISOString()} ${message}`;
+};
 
 export const startEndo = endo => {
+
+  const offerToInstallChromeExtension = () => {
+    const install = document.createElement('button');
+    install.innerText = 'Install Exo Chrome extension';
+    const installP = document.createElement('p');
+    installP.appendChild(install);
+    document.body.appendChild(installP);
+
+    install.onclick = () => {
+      install.remove();
+      installP.innerText = stamp('Installing Exo Chrome extension... ');
+      endo.installChromeExtension().then(
+          () => {
+            const resultP = document.createElement('p');
+            resultP.innerText = stamp('Installed Exo Chrome extension. ');
+            const resultUl = document.createElement('ul');
+            resultUl.appendChild(resultP);
+            document.body.insertBefore(resultUl, install.nextSibling);
+          },
+          error => {
+            console.group('Failed to install Exo Chrome extension:');
+            console.error(error);
+            console.groupEnd();
+
+            installP.innerText = stamp(
+              'Failed to install Exo Chrome extension. ',
+            );
+
+            offerToInstallChromeExtension();
+          },
+        );
+    };
+  };
+
+  offerToInstallChromeExtension();
+
   return Far('ExoConsole', {
     async requestImportBundle(_hash, requestedPowers) {
       // TODO present program hash for out-of-band verification from the user.
@@ -31,7 +72,7 @@ export const startEndo = endo => {
       ul.appendChild(denyLi);
 
       const p = document.createElement('p');
-      p.innerText = `${new Date().toISOString()} [exo]: Received a request to create a back endo. `;
+      p.innerText = stamp('[exo]: Received a request to create a back endo. ');
       document.body.appendChild(p);
       document.body.appendChild(ul);
 
@@ -47,14 +88,14 @@ export const startEndo = endo => {
           const petName = '<no-name>';
           answer({ granted: true, grantedPowers: requestedPowers, petName });
           const q = document.createElement('p');
-          q.innerText = `${new Date().toISOString()} You accepted. `;
+          q.innerText = stamp('You accepted. ');
           ul.appendChild(q);
         };
 
         deny.onclick = () => {
           answer({ granted: false });
           const q = document.createElement('p');
-          q.innerText = `${new Date().toISOString()} You declined. `;
+          q.innerText = stamp('You declined. ');
           ul.appendChild(q);
         };
       });
