@@ -1,0 +1,49 @@
+{
+  "name": "@endo/stream",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./index.js",
+  "author": "Agoric",
+  "license": "Apache-2.0",
+  "scripts": {
+    "test": "ava",
+    "lint": "eslint '**/*.js'",
+    "lint-fix": "eslint --fix '**/*.js'"
+  },
+  "dependencies": {
+    "@agoric/promise-kit": "^0.2.29"
+  },
+  "devDependencies": {
+    "@endo/eslint-config": "^0.3.15",
+    "@typescript-eslint/parser": "^4.18.0",
+    "ava": "^3.12.1",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^7.23.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-eslint-comments": "^3.1.2",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-jsdoc": "^30.4.2",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^1.19.1",
+    "typescript": "^4.0.5"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@endo"
+    ],
+    "ignorePatterns": [
+      "public/**"
+    ]
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "singleQuote": true
+  },
+  "ava": {
+    "files": [
+      "test/**/test-*.js"
+    ],
+    "timeout": "2m"
+  }
+}
