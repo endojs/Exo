@@ -1,0 +1,24 @@
+Exo.app (Electron)
+  main process (src/index.cjs, src/index.js) (node)
+  sets up a unix domain socket and listens for CapTP over JSON over netstring
+  present the Exo API to connectors
+  open windows on behalf of the connects
+  .
+  .
+  .
+  but specifically, one window that is its own console
+  - not one click for security
+  - http://wiki.erights.org/wiki/Documentation#User_Interface
+  - https://github.com/w3c/webappsec-csp/issues/92
+  - https://github.com/w3c/webappsec-csp/issues/282
+  - https://web.archive.org/web/20210516162800/https://www.hpl.hp.com/techreports/2011/HPL-2011-96.pdf
+  
+  FrontEndo (Browser Window) (Render Process)
+    Content Script Isolate (node-like and browser-like, has Electron APIs)
+      preload.cjs
+    Page Script Isolate (actual browser window with a URL and all that)
+      what origin
+
+    
+
+

@@ -1,12 +1,12 @@
 /**
- * This module is where Exo starts.
+ * This module is where the Endo browser starts.
  * Electron provides certain capabilities as the `electron` module,
  * but only in the CommonJS module system.
  * Also, some Electron work must run in the first event, before the Electron
  * `app` is "ready".
  * We do all that work in this CommonJS module and then delegate the Electron
  * powers by dependency-injection to an ESM module that oversees the lifecycle
- * of the Exo main process, `exo.js`.
+ * of the Endo browser main process, `main.js`.
  */
 const electron = require('electron');
 
@@ -31,7 +31,7 @@ if (require('electron-squirrel-startup')) {
 app.disableHardwareAcceleration();
 
 (async () => {
-  const { main } = await import('./exo.js');
+  const { main } = await import('./main.js');
   await main({args, electron, electronReload, isProduction});
 })().catch(error => {
   console.log(error);

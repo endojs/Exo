@@ -20,41 +20,6 @@ const stamp = message => {
 
 export const startEndo = endo => {
 
-  const offerToInstallChromeExtension = () => {
-    const install = document.createElement('button');
-    install.innerText = 'Install Exo Chrome extension';
-    const installP = document.createElement('p');
-    installP.appendChild(install);
-    document.body.appendChild(installP);
-
-    install.onclick = () => {
-      install.remove();
-      installP.innerText = stamp('Installing Exo Chrome extension... ');
-      endo.installChromeExtension().then(
-          () => {
-            const resultP = document.createElement('p');
-            resultP.innerText = stamp('Installed Exo Chrome extension. ');
-            const resultUl = document.createElement('ul');
-            resultUl.appendChild(resultP);
-            document.body.insertBefore(resultUl, install.nextSibling);
-          },
-          error => {
-            console.group('Failed to install Exo Chrome extension:');
-            console.error(error);
-            console.groupEnd();
-
-            installP.innerText = stamp(
-              'Failed to install Exo Chrome extension. ',
-            );
-
-            offerToInstallChromeExtension();
-          },
-        );
-    };
-  };
-
-  offerToInstallChromeExtension();
-
   return Far('ExoConsole', {
     async requestImportBundle(_hash, requestedPowers) {
       // TODO present program hash for out-of-band verification from the user.

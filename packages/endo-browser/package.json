@@ -1,21 +1,21 @@
 {
-  "name": "@endo/exo-app",
-  "productName": "Exo",
+  "name": "@endo/browser",
+  "productName": "Endo",
   "version": "0.1.0",
-  "description": "Fearless cooperator",
+  "description": "A host for Hardened JavaScript applications and plugins",
   "keywords": [],
   "author": "Agoric",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/endojs/exo/tree/master/packages/exo#readme",
+  "homepage": "https://github.com/endojs/endo/tree/master/packages/browser#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/endojs/exo.git"
+    "url": "git+https://github.com/endojs/endo.git"
   },
   "bugs": {
-    "url": "https://github.com/endojs/exo/issues"
+    "url": "https://github.com/endojs/endo/issues"
   },
   "type": "module",
-  "main": "./src/exo.cjs",
+  "main": "./src/main.cjs",
   "scripts": {
     "start": "electron-forge start",
     "build": "rollup -c && node scripts/copy-ses.js",
@@ -33,7 +33,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "exo"
+            "name": "endo"
           }
         },
         {

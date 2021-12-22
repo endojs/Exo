@@ -1,13 +1,13 @@
-/* This module oversees the lifecycle of the Exo main process.
- * The Exo main process is responsible for managing Electron windows,
+/* This module oversees the lifecycle of the Endo browser main process.
+ * The Endo browser main process is responsible for managing Electron windows,
  * receiving requests from programs on the user host on a Unix domain socket,
  * and managing front-end and back-end "Endo" programs.
  * Front Endo programs run in Electron windows and Back Endo programs run in
- * Exo child processes, which is plain Node.js and does not depend on Node.js
- * having been installed elsewhere on the host system.
+ * Endo browser child processes, which is plain Node.js and does not depend on
+ * Node.js having been installed elsewhere on the host system.
  *
  * Because Electron doesn't yet inject its capabilities in an ESM module, we
- * receive them from the `exo.cjs` thunk by dependency injection.
+ * receive them from the `main.cjs` thunk by dependency injection.
  */
 
 /* global HandledPromise, process */
@@ -37,7 +37,7 @@ import bundleSource from '@agoric/bundle-source';
 import { makePromiseKit } from './promise-kit.js';
 import { makeCapTPConnection } from './captp-conn.js';
 import { spawnBackEndo } from './endo-back-manager.js';
-import { whereExoSock } from './exo-sock.js';
+import { whereEndoSock } from './endo-sock.js';
 import { installChromeNativeMessagingHost } from './native-messaging-host-installer.js';
 
 function sink(error) {
@@ -96,14 +96,14 @@ export async function main({ _args, electron, electronReload, isProduction }) {
     import.meta.url,
   );
   const frontEndoHtmlPath = new URL(frontEndoHtmlUrl).pathname;
-  const exoConsoleUrl = await importMetaResolve(
-    './exo-console.js',
+  const endoConsoleUrl = await importMetaResolve(
+    './console.js',
     import.meta.url,
   );
-  const exoConsolePath = new URL(exoConsoleUrl).pathname;
+  const endoConsolePath = new URL(endoConsoleUrl).pathname;
 
-  const exoConsoleBundle = await bundleSource(exoConsolePath);
-  const sockPath = whereExoSock(process.platform, process.env);
+  const endoConsoleBundle = await bundleSource(endoConsolePath);
+  const sockPath = whereEndoSock(process.platform, process.env);
 
   // This is needed to map the Pledger systray to the signing certificate.  For
   // non-production runs we use a different value.
@@ -115,12 +115,12 @@ export async function main({ _args, electron, electronReload, isProduction }) {
   // messages to the corresponding CapTP connection.
   const dispatchers = new WeakMap();
 
-  let currentExoConsolePK = makePromiseKit();
-  const exoConsoleP = new HandledPromise(
+  let currentEndoConsolePK = makePromiseKit();
+  const endoConsoleP = new HandledPromise(
     (_resolve, _reject, resolveWithPresence) => {
       resolveWithPresence({
         applyMethod(_p, name, args) {
-          return E(currentExoConsolePK.promise)[name](...args);
+          return E(currentEndoConsolePK.promise)[name](...args);
         },
       });
     },
@@ -147,28 +147,29 @@ export async function main({ _args, electron, electronReload, isProduction }) {
     consoleWindow.webContents.on('did-finish-load', () => {
       const send = message =>
         consoleWindow.webContents.send('message', message);
-      const { dispatch, getBootstrap } = makeCapTP('Exo', send);
+      const { dispatch, getBootstrap } = makeCapTP('Endo', send);
       dispatchers.set(consoleWindow.webContents, dispatch);
       const bootstrap = getBootstrap();
-      // TODO pass endo powers for communication back to Exo, including
-      // requests for introductions to additional powers.
+      // TODO pass endo powers for communication back to the Endo browser,
+      // including requests for introductions to additional powers.
       const grantedPowers = [];
-      const endoP = Far('Endo', {}); // TODO make a power facet for this specific instance.
+      // TODO make a power facet for this specific instance.
+      const endoP = Far('Endo', {});
       const instance = E(bootstrap).importBundle(
-        exoConsoleBundle,
+        endoConsoleBundle,
         endoP,
         grantedPowers,
       );
-      currentExoConsolePK.resolve(instance);
+      currentEndoConsolePK.resolve(instance);
     });
 
     consoleWindow.on('closed', () => {
-      currentExoConsolePK = makePromiseKit();
+      currentEndoConsolePK = makePromiseKit();
       consoleWindow = undefined;
     });
   };
 
-  const exo = Far('Exo', {
+  const endo = Far('Endo', {
     async importBundle(bundle) {
       // Petition the user for authorization to install this thing.
       // If accepted, spawn a process and use its stdio for a capTP bridge
@@ -178,8 +179,8 @@ export async function main({ _args, electron, electronReload, isProduction }) {
       // TODO Provide options for lifecycle coupling between the installer or
       // executor process and the back-endo process.
       // TODO Provide options for automatically restarting installed back-endos
-      // whenever Exo reopens. Capture back-endo installations in per-user
-      // configuration storage.
+      // whenever the Endo browser reopens. Capture back-endo installations in
+      // per-user configuration storage.
       // TODO Surface the size of the installation to the user.
       // TODO Provide an interface for deleting installations.
       // TODO Support pet names for installations and instances.
@@ -192,7 +193,7 @@ export async function main({ _args, electron, electronReload, isProduction }) {
         const requestedPowers = [];
         console.log('waiting');
         const { granted, grantedPowers, petName } = await E(
-          exoConsoleP,
+          endoConsoleP,
         ).requestImportBundle(hash, requestedPowers);
         console.log('answer', { granted, grantedPowers, petName });
         // TODO Receive and track a pet name for the instance.
@@ -203,16 +204,16 @@ export async function main({ _args, electron, electronReload, isProduction }) {
           // process.
           // TODO virtualize the back-endo console.
           // TODO create a Causeway window for attached back-endos.
-          const { getBootstrap, drained, exited, kill } = await spawnBackEndo(
+          const { getBootstrap, drained, exit /* TODO kill */ } = await spawnBackEndo(
             popen.fork,
             'BackEndo',
-            exoConsoleP,
+            endoConsoleP,
           );
           drained.catch(sink);
-          // TODO send process control to Exo Console.
+          // TODO send process control to Endo Console.
           exited
             .then(() => {
-              // TODO Inform the user through the Exo Console.
+              // TODO Inform the user through the Endo Console.
               console.log('Back-endo exited');
             })
             .catch(sink);
@@ -251,13 +252,13 @@ export async function main({ _args, electron, electronReload, isProduction }) {
   const createTray = async () => {
     const trayIconPath = resourcePath(
       process.platform === 'win32'
-        ? '../asset/exo.ico'
-        : '../asset/exo-task-tray-22.png',
+        ? '../asset/endo.ico'
+        : '../asset/endo-task-tray-22.png',
     );
     appTray = new Tray(trayIconPath, TRAY_GUID);
     const contextMenu = Menu.buildFromTemplate([
       {
-        label: 'Exo Console',
+        label: 'Endo Console',
         async click() {
           provideConsoleWindow();
           consoleWindow.show();
@@ -266,7 +267,7 @@ export async function main({ _args, electron, electronReload, isProduction }) {
       { role: 'quit' },
     ]);
 
-    appTray.setToolTip('Exo');
+    appTray.setToolTip('Endo');
     appTray.setContextMenu(contextMenu);
     appTray.on('click', () => appTray.popUpContextMenu());
   };
@@ -303,7 +304,7 @@ export async function main({ _args, electron, electronReload, isProduction }) {
     console.log(`Listening on ${sockPath}`);
   });
   server.on('connection', conn => {
-    const { drained } = makeCapTPConnection('Exo', conn, exo);
+    const { drained } = makeCapTPConnection('Endo', conn, endo);
     drained.catch(sink);
     provideConsoleWindow();
     consoleWindow.show();
