@@ -7477,15 +7477,10 @@ node-fetch@^2.6.0, node-fetch@^2.6.1:
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
   integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
 
-node-gyp-build@^4.2.1:
+node-gyp-build@^4.2.1, node-gyp-build@^4.2.3:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-4.3.0.tgz#9f256b03e5826150be39c764bf51e993946d71a3"
   integrity sha512-iWjXZvmboq0ja1pUGULQBexmxq8CV4xBhX7VDOTbL7ZR4FOowwY/VOtRxBN/yKxmdGoIp4j5ysNT4u3S2pDQ3Q==
-
-node-gyp-build@^4.2.3:
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-4.2.3.tgz#ce6277f853835f718829efb47db20f3e4d9c4739"
-  integrity sha512-MN6ZpzmfNCRM+3t57PTJHgHyw/h4OWnZ6mR8P5j/uZtqQr46RRuDE/P+g3n0YR/AiYXeWixZZzaip77gdICfRg==
 
 node-gyp@^7.1.0:
   version "7.1.0"
@@ -7519,10 +7514,10 @@ node-gyp@^8.1.0:
     tar "^6.1.2"
     which "^2.0.2"
 
-node-lmdb@^0.9.4:
-  version "0.9.4"
-  resolved "https://registry.yarnpkg.com/node-lmdb/-/node-lmdb-0.9.4.tgz#cde77d23445dc0528348ca0c8c39f552711939f8"
-  integrity sha512-tDpOdHLnEGEA4YqYg+oBYvQxRqeW3LoGFllZYNvUckZTc2kiqbz+JuNPuP4Cpw4xZI6i3dZb8opAFz2JMgs1Rg==
+node-lmdb@^0.9.4, node-lmdb@^0.9.7:
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/node-lmdb/-/node-lmdb-0.9.7.tgz#f518be2fd5922f445f9d11537753a5e938f1c5a1"
+  integrity sha512-RyYSB3kTByjp1yCKE474yuoBxi/+8kKvjYFOVuDBVoS31D6JvzjwMgNnQrMwoHSbZ6RwucW7jmF93Cm9ltziJQ==
   dependencies:
     nan "^2.14.1"
     node-gyp-build "^4.2.3"
