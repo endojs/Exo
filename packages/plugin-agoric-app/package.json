@@ -25,7 +25,7 @@
     "re2": "^1.15.6"
   },
   "devDependencies": {
-    "electron": "~11.5.0",
+    "electron": "~13.6.6",
     "electron-rebuild": "^2.0.3",
     "esm": "^3.2.25",
     "patch-package": "^6.2.2"
