@@ -25,7 +25,7 @@
     "ses": "^0.12.2",
     "sirv-cli": "^1.0.0",
     "smelte": "^1.0.15",
-    "svelte": "^3.0.0",
+    "svelte": "^3.49.0",
     "svelte-awesome": "^2.3.0",
     "svelte-themer": "^0.1.4"
   },
