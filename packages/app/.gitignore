@@ -9,3 +9,9 @@ lerna-debug.log*
 
 # Ignore all files in the node_modules folder
 node_modules/
+
+# Ignore downloads
+/node
+/node-*.tar.gz
+/node-*.zip
+/node-*/
