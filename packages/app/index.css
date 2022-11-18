@@ -1,0 +1,28 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: Lucida Grande, sans-serif;
+  height: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: #222222;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 4px;
+  padding-top: 0;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+  padding: 2px;
+}
+
