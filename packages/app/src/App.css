@@ -1,0 +1,26 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: Lucida Grande, sans-serif;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 4px;
+  padding-top: 0;
+  height: 100%;
+}
+
+#root {
+  border-radius: 5px;
+  height: 100%;
+  width: 100%;
+  padding: 2px;
+  border: solid 2px #800000;
+
+  background-color: white;
+}
+
