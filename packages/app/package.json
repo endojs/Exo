@@ -25,7 +25,6 @@
     "lint:types": "tsc -p jsconfig.json",
     "test": "exit 0"
   },
-  "dependencies": {},
   "devDependencies": {
     "@endo/eslint-config": "^0.3.6",
     "ava": "^3.12.1",
@@ -37,7 +36,8 @@
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-prettier": "^3.4.1",
     "prettier": "^1.19.1",
-    "typescript": "~4.8.4"
+    "typescript": "~4.8.4",
+    "vite": "^3.2.3"
   },
   "files": [],
   "eslintConfig": {

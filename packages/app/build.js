@@ -48,7 +48,7 @@ async function main() {
       ext = 'icns';
   }
 
-  await cp('index.html', target);
+  await sh(source, 'yarn', 'run', 'vite', 'build', '--outDir', target, '--base', './');
   await cp(`../../art/gen/icon.${ext}`, target); // app icon
 }
  
