@@ -15,3 +15,7 @@ node_modules/
 /node-*.tar.gz
 /node-*.zip
 /node-*/
+
+# Provisioning profile
+*.mobileprovision
+/dist
