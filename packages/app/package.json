@@ -17,6 +17,7 @@
   "type": "module",
   "exports": {},
   "scripts": {
+    "postinstall": "sh scripts/get-node.sh",
     "build": "exit 0",
     "lint": "yarn lint:types && yarn lint:js",
     "lint-fix": "eslint --fix .",
