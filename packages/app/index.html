@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="endo.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>Endo</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module">
+
+      window.parent.setTitle('Endo');
+      window.parent.setMenu({index: 0, value: `
+        Endo:
+          Close: w
+          Quit: q;
+      `});
+      window.addEventListener('menuItemSelected', event => {
+        window.parent.exit(0);
+      });
+
+    </script>
+  </body>
+</html>

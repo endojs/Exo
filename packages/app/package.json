@@ -1,0 +1,62 @@
+{
+  "name": "@endo/app",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Fearless collaborator",
+  "keywords": [],
+  "author": "Endo contributors",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/endojs/exo/tree/master/packages/app#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/endojs/exo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/endojs/exo/issues"
+  },
+  "type": "module",
+  "exports": {},
+  "scripts": {
+    "postinstall": "sh scripts/get-node.sh",
+    "start": "vite --port 4747",
+    "open": "ssc run",
+    "build:dev": "ssc build --port=4747",
+    "build:prod": "ssc build",
+    "build": "exit 0",
+    "lint": "yarn lint:types && yarn lint:js",
+    "lint-fix": "eslint --fix .",
+    "lint:js": "eslint .",
+    "lint:types": "tsc -p jsconfig.json",
+    "test": "exit 0"
+  },
+  "devDependencies": {
+    "@endo/eslint-config": "^0.3.6",
+    "ava": "^3.12.1",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^7.23.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-eslint-comments": "^3.1.2",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-prettier": "^3.4.1",
+    "prettier": "^1.19.1",
+    "typescript": "~4.8.4",
+    "vite": "^3.2.3"
+  },
+  "files": [],
+  "eslintConfig": {
+    "extends": [
+      "@endo"
+    ]
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "singleQuote": true
+  },
+  "ava": {
+    "files": [
+      "test/**/test-*.js"
+    ],
+    "timeout": "2m"
+  }
+}
