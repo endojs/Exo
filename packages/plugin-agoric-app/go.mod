@@ -2,11 +2,6 @@ module main
 
 go 1.15
 
-require (
-	github.com/Agoric/agoric-sdk v0.24.1
-	github.com/ethereum/go-ethereum v1.9.22 // indirect
-)
-
 // Silence a warning on MacOS
 replace github.com/keybase/go-keychain => github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4
 
